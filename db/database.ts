@@ -51,7 +51,7 @@ export class psql implements Database {
           from notifications
           where id = ${startId}
         )
-        ORDER BY timestamp DESC, id DESC
+        ORDER BY timestamp DESC
         LIMIT 50;
       `;
     } else {
@@ -73,6 +73,7 @@ export class psql implements Database {
         body: row.body,
         timestamp: row.timestamp,
         read: row.read,
+        category: row.category,
         ...row.data,
       } as Notification;
 

@@ -40,7 +40,5 @@ export interface Plugin {
   name: string;
 
   initialize(): any;
-  login(): Promise<void>;
-  isLoggedIn(): Promise<Boolean>;
   getNotifications(): Promise<Notification[]>;
 }

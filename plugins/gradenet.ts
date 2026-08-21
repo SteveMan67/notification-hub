@@ -19,55 +19,50 @@ interface MessageResponse {
     id: string;
     msg_subject: string;
     msg: string;
-    owner_name: string;
+    sender_name: string;
     created_at: string;
     is_read: boolean;
   }[];
+}
+
+async function login() {
+  const response = await fetch(
+    "https://aca.gradenet.net/api/v1/session/login",
+    {
+      method: "POST",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0",
+        Accept: "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        Referer: "https://aca.gradenet.net/login",
+        Origin: "https://aca.gradenet.net",
+        "Sec-GPC": "1",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Priority: "u=0",
+      },
+      body: JSON.stringify({
+        uid: "460-10-1361",
+        password: process.env.GRADENET_PASSWORD,
+      }),
+    },
+  );
+
+  sessionId = response.headers.get("set-cookie")?.split(";")[0] as string;
+
+  return;
 }
 
 const plugin: Plugin = {
   id: "gradenet",
   name: "GradeNet",
 
-  initialize() {
+  async initialize() {
+    await login();
     return;
-  },
-
-  async login() {
-    const response = await fetch(
-      "https://aca.gradenet.net/api/v1/session/login",
-      {
-        method: "POST",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0",
-          Accept: "application/json",
-          "Accept-Language": "en-US,en;q=0.9",
-          "Content-Type": "application/json",
-          Referer: "https://aca.gradenet.net/login",
-          Origin: "https://aca.gradenet.net",
-          "Sec-GPC": "1",
-          "Sec-Fetch-Dest": "empty",
-          "Sec-Fetch-Mode": "cors",
-          "Sec-Fetch-Site": "same-origin",
-          Priority: "u=0",
-        },
-        body: JSON.stringify({
-          uid: "460-10-1361",
-          password: process.env.GRADENET_PASSWORD,
-        }),
-      },
-    );
-
-    sessionId = response.headers.get("set-cookie")?.split(";")[0] as string;
-
-    console.log(`got cookie ${sessionId}`);
-
-    return;
-  },
-
-  async isLoggedIn() {
-    return false;
   },
 
   async getNotifications(): Promise<Notification[]> {
@@ -119,8 +114,7 @@ const plugin: Plugin = {
       (await assignmentResponse.json()) as ApiResponse;
 
     if (assignmentResponse.status != 200) {
-      console.log(assignmentResponse.status);
-      plugin.login();
+      login();
     }
 
     const messages: MessageResponse =
@@ -153,7 +147,7 @@ const plugin: Plugin = {
         read: message.is_read,
         sourceId: plugin.id,
         category: "message",
-        sender: message.owner_name,
+        sender: message.sender_name,
       };
 
       notifications.push(notification);

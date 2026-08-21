@@ -17,6 +17,6 @@ export async function initPlugins() {
 
   for (const plugin of plugins) {
     await plugin.initialize();
-    await plugin.login();
   }
+  return;
 }
