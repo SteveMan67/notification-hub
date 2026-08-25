@@ -1,4 +1,9 @@
-export type Category = "message" | "email" | "assignment" | "grade" | "other";
+export type NotificationCategory =
+  | "message"
+  | "email"
+  | "assignment"
+  | "grade"
+  | "other";
 
 export type NotificationBase = {
   sourceNotificationId: string;
