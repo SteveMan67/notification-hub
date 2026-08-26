@@ -2,9 +2,9 @@ import { plugins } from "./plugin.ts";
 import { db } from "./db/index.ts";
 
 export async function updateNotifications() {
-  for (const plugin of plugins) {
+  for (const { plugin, context } of plugins) {
     try {
-      const notifications = await plugin.getNotifications();
+      const notifications = await plugin.getNotifications(context);
 
       for (const notification of notifications) {
         await db.addNotification(notification);

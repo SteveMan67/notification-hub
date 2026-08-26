@@ -1,14 +1,21 @@
-export type SettingType = "text" | "password" | "number" | "boolean" | "select";
+import type { PluginSettings } from "./context";
+import type { Database } from "../db/index.ts";
 
-export interface PluginSetting {
-  type: SettingType;
-  label: string;
-  description?: string;
-  required?: boolean;
-  secret?: boolean;
+export class DatabasePluginSettings implements PluginSettings {
+  constructor(
+    private db: Database,
+    private pluginId: string,
+  ) {}
 
-  options?: {
-    label: string;
-    value: string;
-  }[];
+  async get(key: string): Promise<string | undefined> {
+    return this.db.getPluginSetting(this.pluginId, key);
+  }
+
+  async set(key: string, value: string) {
+    return this.db.setPluginSetting(this.pluginId, key, value);
+  }
+
+  async delete(key: string) {
+    return this.db.deletePluginSetting(this.pluginId, key);
+  }
 }

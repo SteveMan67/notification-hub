@@ -1,6 +1,6 @@
 import { SQL } from "bun";
 import type { Database } from "../db/index.ts";
-import type { Category, Notification } from "../types/index.ts";
+import type { NotificationCategory, Notification } from "../types/index.ts";
 
 const sql = new SQL(process.env.DATABASE_URL as string);
 
@@ -27,7 +27,51 @@ await sql`
   )
 `;
 
+await sql`
+  CREATE TABLE IF NOT EXISTS settings (
+    plugin_id TEXT NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+
+    PRIMARY KEY (plugin_id, key)
+  )
+`;
+
 export class psql implements Database {
+  async getPluginSetting(
+    pluginId: string,
+    key: string,
+  ): Promise<string | undefined> {
+    const response = await sql`
+      SELECT value from settings
+      WHERE plugin_id = ${pluginId} AND key = ${key};
+    `;
+
+    return response.key || undefined;
+  }
+
+  async setPluginSetting(
+    pluginId: string,
+    key: string,
+    value: string,
+  ): Promise<void> {
+    await sql`
+      INSERT INTO settings (plugin_id, key, value) 
+      VALUES (${pluginId}, ${key}, ${value})
+      ON CONFLICT (plugin_id, key)
+      DO UPDATE SET value = EXCLUDED.value;
+    `;
+    return;
+  }
+
+  async deletePluginSetting(pluginId: string, key: string): Promise<void> {
+    await sql`
+      DELETE from settings 
+      WHERE plugin_id = ${pluginId} AND key = ${key};
+    `;
+    return;
+  }
+
   async getNotifications(startId: number | null): Promise<Notification[]> {
     type NotificationRow = {
       id: number;

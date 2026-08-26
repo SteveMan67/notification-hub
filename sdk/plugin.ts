@@ -1,6 +1,6 @@
 import type { PluginContext } from "./context.ts";
 import type { Notification } from "../types";
-import type { PluginSetting } from "./settings.ts";
+import type { PluginSetting } from "./settings-schema.ts";
 
 export interface PluginDefinition {
   id: string;
