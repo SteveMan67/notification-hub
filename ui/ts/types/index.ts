@@ -2,8 +2,6 @@ export const NotificationCategories = [
   "message",
   "email",
   "assignment",
-  "grade",
-  "other",
 ] as const;
 
 export type NotificationCategory = (typeof NotificationCategories)[number];
@@ -43,11 +41,3 @@ export type Notification =
   | AssignmentNotification
   | MessageNotification
   | EmailNotification;
-
-export interface Plugin {
-  id: string;
-  name: string;
-
-  initialize(): any;
-  getNotifications(): Promise<Notification[]>;
-}

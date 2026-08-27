@@ -1,51 +1,80 @@
 import { ImapFlow } from "imapflow";
 import type { Plugin, Notification } from "../types/index.ts";
+import { definePlugin } from "../sdk/plugin.ts";
+import type { PluginSetting } from "../sdk/settings-schema.ts";
 
 type Inbox = {
   address: string;
   password: string;
-  host: string;
+  server: string;
 };
 
 const inboxes: Inbox[] = [];
 
-function createInbox(address: string, password: string, host: string) {
+function createInbox(address: string, password: string, server: string) {
   return {
     address,
     password,
-    host,
+    server,
   };
 }
 
-const personalEmail = createInbox(
-  "timslawncare.ok@gmail.com",
-  process.env.PERSONAL_EMAIL_APP_PASSWORD as string,
-  "imap.gmail.com",
-);
-
-const acaEmail = createInbox(
-  "poppt@acatulsa.org",
-  process.env.SCHOOL_EMAIL_PASSWORD as string,
-  "imap.gmail.com",
-);
-
-inboxes.push(acaEmail);
-inboxes.push(personalEmail);
-
-const plugin: Plugin = {
+export default definePlugin({
   id: "email",
   name: "Email",
+  version: "1.0",
 
-  async initialize() {
-    console.log("initialized");
-    return;
+  settings: {
+    inboxes: {
+      type: "object-list",
+      label: "Email Addresses",
+      fields: {
+        address: {
+          type: "text",
+          label: "Email Address",
+        },
+        password: {
+          type: "password",
+          label: "Password",
+        },
+        server: {
+          type: "select",
+          label: "Server",
+          description:
+            "Gmail requires an App password to authenticate if 2FA is enabled. This can be found in your Google Account settings",
+          options: [
+            {
+              label: "Gmail",
+              value: "imap.gmail.com",
+            },
+            {
+              label: "Outlook",
+              value: "outlook.Microsoft365.com",
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  async initialize(ctx) {
+    const inboxes = await ctx.settings.get<Inbox[]>("inboxes");
+
+    if (!inboxes) {
+      ctx.logger.warn("No inboxes found in configuration");
+      return;
+    }
+
+    for (const inbox of inboxes) {
+      createInbox(inbox.address, inbox.password, inbox.server);
+    }
   },
 
   async getNotifications() {
     const notifications: Notification[] = [];
     for (const inbox of inboxes) {
       const client = new ImapFlow({
-        host: inbox.host,
+        host: inbox.server,
         port: 993,
         secure: true,
         auth: {
@@ -83,7 +112,7 @@ const plugin: Plugin = {
 
           notifications.push({
             sourceNotificationId: message.uid.toString(),
-            sourceId: plugin.id,
+            sourceId: "email",
             title: message.envelope?.subject as string,
             body: "",
             timestamp: timestamp,
@@ -91,6 +120,7 @@ const plugin: Plugin = {
             category: "email",
             sender: senderEmail,
             recipient: inbox.address,
+            link: "",
           });
         }
       } finally {
@@ -100,6 +130,4 @@ const plugin: Plugin = {
 
     return notifications;
   },
-};
-
-export default plugin;
+});

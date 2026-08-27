@@ -11,5 +11,9 @@ export function createPluginContext(
   return {
     settings: new DatabasePluginSettings(db, pluginId),
     logger: new NotificationLogger(pluginName),
+
+    async addNotification(notification) {
+      db.addNotification(notification);
+    },
   };
 }

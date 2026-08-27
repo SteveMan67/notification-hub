@@ -1,4 +1,10 @@
-export type SettingType = "text" | "password" | "number" | "boolean" | "select";
+export type SettingType =
+  | "text"
+  | "password"
+  | "number"
+  | "boolean"
+  | "select"
+  | "object-list";
 
 export interface PluginSetting {
   type: SettingType;
@@ -6,9 +12,10 @@ export interface PluginSetting {
   description?: string;
   required?: boolean;
   secret?: boolean;
-
   options?: {
     label: string;
     value: string;
   }[];
+
+  fields?: Record<string, PluginSetting>;
 }

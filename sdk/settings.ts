@@ -7,15 +7,25 @@ export class DatabasePluginSettings implements PluginSettings {
     private pluginId: string,
   ) {}
 
-  async get(key: string): Promise<string | undefined> {
-    return this.db.getPluginSetting(this.pluginId, key);
+  async get<T = string>(key: string): Promise<T | undefined> {
+    const value = await this.db.getPluginSetting(this.pluginId, key);
+
+    if (value == undefined) {
+      return undefined;
+    }
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
   }
 
-  async set(key: string, value: string) {
-    return this.db.setPluginSetting(this.pluginId, key, value);
+  async set<T = string>(key: string, value: T) {
+    await this.db.setPluginSetting(this.pluginId, key, JSON.stringify(value));
   }
 
   async delete(key: string) {
-    return this.db.deletePluginSetting(this.pluginId, key);
+    await this.db.deletePluginSetting(this.pluginId, key);
   }
 }

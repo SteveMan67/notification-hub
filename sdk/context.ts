@@ -1,11 +1,14 @@
+import type { Notification } from "../types";
+
 export interface PluginContext {
   settings: PluginSettings;
   logger: Logger;
+  addNotification(notification: Notification): Promise<void>;
 }
 
 export interface PluginSettings {
-  get(key: string): Promise<string | undefined>;
-  set(key: string, value: string): Promise<void>;
+  get<T = "string">(key: string): Promise<T | undefined>;
+  set<T = "string">(key: string, value: T): Promise<void>;
   delete(key: string): Promise<void>;
 }
 

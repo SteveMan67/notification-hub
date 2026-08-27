@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "TypeScript Watch",
+      "type": "shell",
+      "command": "bunx tsc --watch",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "SCSS Watch",
+      "type": "shell",
+      "command": "bunx sass --watch ui/scss:ui/css",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Watch",
+      "dependsOn": ["TypeScript Watch", "SCSS Watch"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}

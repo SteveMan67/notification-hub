@@ -1,4 +1,7 @@
 import type { Plugin, Notification } from "../types/index.ts";
+import { definePlugin } from "../sdk/plugin.ts";
+import { password } from "bun";
+import type { PluginContext } from "../sdk/context.ts";
 
 let sessionId: string = "";
 
@@ -25,7 +28,15 @@ interface MessageResponse {
   }[];
 }
 
-async function login() {
+async function login(ctx: PluginContext) {
+  const uid = ctx.settings.get("uid");
+  const password = ctx.settings.get("password");
+
+  if (!uid || !password) {
+    ctx.logger.warn("Failed to login, no credentials set.");
+    return;
+  }
+
   const response = await fetch(
     "https://aca.gradenet.net/api/v1/session/login",
     {
@@ -56,16 +67,30 @@ async function login() {
   return;
 }
 
-const plugin: Plugin = {
+export default definePlugin({
   id: "gradenet",
   name: "GradeNet",
+  version: "1.0",
 
-  async initialize() {
-    await login();
+  settings: {
+    uid: {
+      type: "text",
+      label: "Student Id",
+      required: true,
+    },
+    password: {
+      type: "password",
+      label: "Password",
+      required: true,
+    },
+  },
+
+  async initialize(ctx) {
+    await login(ctx);
     return;
   },
 
-  async getNotifications(): Promise<Notification[]> {
+  async getNotifications(ctx): Promise<Notification[]> {
     const assignmentResponse = await fetch(
       "https://aca.gradenet.net/api/v1/student-records/assignments?uid=460101361",
       {
@@ -113,8 +138,8 @@ const plugin: Plugin = {
     const assignments: ApiResponse =
       (await assignmentResponse.json()) as ApiResponse;
 
-    if (assignmentResponse.status != 200) {
-      login();
+    if (assignmentResponse.ok) {
+      await login(ctx);
     }
 
     const messages: MessageResponse =
@@ -131,8 +156,9 @@ const plugin: Plugin = {
         dueDate: new Date(`${assignment.due_date}T${assignment.due_time}`),
         read: false,
         class: assignment.class_name,
-        sourceId: plugin.id,
+        sourceId: "gradenet",
         category: "assignment",
+        link: `https://aca.gradenet.net/student-records/assignment/${assignment.assignment_id}`,
       };
 
       notifications.push(notification);
@@ -145,9 +171,10 @@ const plugin: Plugin = {
         body: message.msg,
         timestamp: new Date(message.created_at),
         read: message.is_read,
-        sourceId: plugin.id,
+        sourceId: "gradenet",
         category: "message",
         sender: message.sender_name,
+        link: `https://aca.gradenet.net/messaging/inbox/${message.id}`,
       };
 
       notifications.push(notification);
@@ -155,6 +182,4 @@ const plugin: Plugin = {
 
     return notifications;
   },
-};
-
-export default plugin;
+});

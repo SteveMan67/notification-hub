@@ -5,6 +5,7 @@ import type { PluginSetting } from "./settings-schema.ts";
 export interface PluginDefinition {
   id: string;
   name: string;
+  description?: string;
   version: string;
 
   settings?: Record<string, PluginSetting>;
