@@ -1,0 +1,33 @@
+@use "../abstracts/variables" as *;
+
+html {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.grid {
+  border: #{$border-width} solid #{$border-color};
+
+  height: 100%;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-areas: "sidebar main-content";
+
+  .sidebar {
+    grid-area: sidebar;
+    height: 100%;
+    border-right: #{$border-width} solid #{$border-color};
+  }
+
+  .main-content {
+    grid-area: main-content;
+    height: 100%;
+  }
+}

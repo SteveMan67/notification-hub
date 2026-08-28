@@ -1,0 +1,60 @@
+@use "../abstracts/variables" as *;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+@mixin heading {
+  font-size: 40px;
+  font-weight: bold;
+  color: $text;
+}
+
+@mixin subheading {
+  font-size: 24px;
+  font-weight: bold;
+  color: $text;
+}
+
+@mixin bold-label {
+  font-size: 20px;
+  font-weight: bold;
+  color: $text;
+}
+
+@mixin sidebar-bold {
+  font-size: 16px;
+  font-weight: bold;
+  color: $text;
+}
+
+@mixin sidebar-label {
+  font-size: 16px;
+  font-weight: normal;
+  color: $text;
+}
+
+@mixin body {
+  font-size: 18px;
+  font-weight: normal;
+  color: $text;
+}
+
+@mixin body-bold {
+  font-size: 18px;
+  color: $text;
+}
+
+@mixin body-light {
+  font-size: 18px;
+  font-weight: 300;
+  color: $muted-text;
+}

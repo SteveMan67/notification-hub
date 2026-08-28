@@ -1,0 +1,12 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 25px;
+
+  .category-list,
+  .settings-list {
+    display: flex;
+    flex-direction: column;
+  }
+}

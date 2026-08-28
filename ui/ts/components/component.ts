@@ -1,5 +1,3 @@
-import { isObjectBindingPattern } from "typescript";
-
 export abstract class Component<T extends object> extends HTMLElement {
   protected readonly props: T;
 
