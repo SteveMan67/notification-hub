@@ -11,6 +11,7 @@ export interface Filter {
 }
 
 interface NotificationsPage extends Page {
+  setFilter(filter: string | "none"): void;
   fetchNotifications(): Promise<void>;
 }
 
@@ -24,8 +25,12 @@ export class NotificationPage implements NotificationsPage {
   };
 
   private getSortedNotifications(): Notification[] {
-    console.log(this.filter);
-    let notifications = [...this.notifications];
+    let notifications = this.notifications.filter((notification) => {
+      return (
+        this.filter.type === "none" ||
+        notification.category === this.filter.type
+      );
+    });
 
     notifications.sort((a, b) => {
       let comparison: number;
@@ -41,15 +46,11 @@ export class NotificationPage implements NotificationsPage {
       return this.filter.isAscending ? comparison : -comparison;
     });
 
-    return notifications.filter(
-      (f) => f.category === this.filter.type || this.filter.type === "none",
-    );
+    return notifications;
   }
 
   private renderNotifications() {
     const container = document.querySelector("#notifications");
-
-    console.log(container);
 
     if (!container) return;
 
@@ -96,6 +97,12 @@ export class NotificationPage implements NotificationsPage {
     }
   }
 
+  setFilter(filter: NotificationCategory | "none") {
+    this.filter.type = filter;
+
+    this.renderNotifications();
+  }
+
   async fetchNotifications(): Promise<void> {
     const response = await fetch("/api/notifications", {
       method: "GET",
@@ -114,7 +121,6 @@ export class NotificationPage implements NotificationsPage {
       (notification) =>
         (notification.timestamp = new Date(notification.timestamp)),
     );
-    console.log(this.notifications);
     this.notifications = this.getSortedNotifications();
     this.renderNotifications();
   }
