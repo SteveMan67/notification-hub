@@ -98,6 +98,7 @@ export class NotificationPage implements NotificationsPage {
   }
 
   setFilter(filter: NotificationCategory | "none") {
+    console.log(filter);
     this.filter.type = filter;
 
     this.renderNotifications();

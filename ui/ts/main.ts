@@ -2,7 +2,7 @@ import "./components/notification-card.js";
 import "./components/sidebar-item.js";
 import { addSidebarCategories, addSidebarSettings } from "./sidebar.js";
 import { NotificationPage } from "./pages/notifications.js";
-import { pages, PageName, NavRequest } from "./page-manager.js";
+import { pages, PageName, NavRequest, PageManager } from "./page-manager.js";
 
 addSidebarCategories();
 addSidebarSettings();
@@ -16,11 +16,11 @@ if (!pageContainer) {
 document.addEventListener("navigate", async (e) => {
   if (!(e instanceof CustomEvent)) return;
 
-  const { page, filter } = e.detail as NavRequest;
+  const req = e.detail as NavRequest;
 
-  const pageInstance = pages[page];
+  const pageManager = new PageManager(pageContainer as HTMLElement);
 
-  await pageInstance.mount(pageContainer as HTMLElement);
+  pageManager.show(req);
 });
 
 const page = new NotificationPage();

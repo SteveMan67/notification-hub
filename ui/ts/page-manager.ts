@@ -18,18 +18,26 @@ export interface Page {
   unmount(): Promise<void>;
 }
 
-export class pageManager {
+export class PageManager {
   currentPage?: Page;
 
   constructor(private container: HTMLElement) {}
 
-  show(page: Page) {
-    this.currentPage?.unmount();
+  show(req: NavRequest) {
+    const page = pages[req.page];
 
-    this.container.innerHTML = "";
+    if (req.page === "notifications" && req.filter) {
+      (page as NotificationPage).setFilter(req.filter);
+    }
 
-    page.mount(this.container);
+    if (page != this.currentPage) {
+      this.currentPage?.unmount();
 
-    this.currentPage = page;
+      this.container.innerHTML = "";
+
+      page.mount(this.container);
+
+      this.currentPage = page;
+    }
   }
 }

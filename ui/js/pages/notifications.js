@@ -9,8 +9,10 @@ export class NotificationPage {
         };
     }
     getSortedNotifications() {
-        console.log(this.filter);
-        let notifications = [...this.notifications];
+        let notifications = this.notifications.filter((notification) => {
+            return (this.filter.type === "none" ||
+                notification.category === this.filter.type);
+        });
         notifications.sort((a, b) => {
             let comparison;
             switch (this.filter.sort) {
@@ -22,11 +24,10 @@ export class NotificationPage {
             }
             return this.filter.isAscending ? comparison : -comparison;
         });
-        return notifications.filter((f) => f.category === this.filter.type || this.filter.type === "none");
+        return notifications;
     }
     renderNotifications() {
         const container = document.querySelector("#notifications");
-        console.log(container);
         if (!container)
             return;
         container.innerHTML = "";
@@ -60,6 +61,11 @@ export class NotificationPage {
             }
         }
     }
+    setFilter(filter) {
+        console.log(filter);
+        this.filter.type = filter;
+        this.renderNotifications();
+    }
     async fetchNotifications() {
         const response = await fetch("/api/notifications", {
             method: "GET",
@@ -71,7 +77,6 @@ export class NotificationPage {
         const notifications = body;
         this.notifications = notifications;
         this.notifications.map((notification) => (notification.timestamp = new Date(notification.timestamp)));
-        console.log(this.notifications);
         this.notifications = this.getSortedNotifications();
         this.renderNotifications();
     }
