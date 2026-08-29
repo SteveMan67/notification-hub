@@ -11,6 +11,8 @@ export async function addSidebarCategories() {
     const overviewElement = document.createElement("sidebar-item");
     overviewElement.text = "Overview";
     categoryContainer === null || categoryContainer === void 0 ? void 0 : categoryContainer.append(overviewElement);
+    overviewElement.category = "none";
+    overviewElement.page = "notifications";
     overviewElement.selected = true;
     for (const category of categories) {
         const categoryElement = document.createElement("sidebar-item");

@@ -17,6 +17,8 @@ export async function addSidebarCategories() {
 
   overviewElement.text = "Overview";
   categoryContainer?.append(overviewElement);
+  overviewElement.category = "none";
+  overviewElement.page = "notifications";
   overviewElement.selected = true;
 
   for (const category of categories) {
