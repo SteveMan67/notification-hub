@@ -29,7 +29,7 @@ export function formatTimestamp(date: Date): string {
     (today.getTime() - dateDay.getTime()) / (1000 * 60 * 60 * 24),
   );
 
-  if (daysAgo < 7) {
+  if (daysAgo >= 0 && daysAgo < 7) {
     return `${date.toLocaleDateString([], {
       weekday: "long",
     })}, ${time}`;

@@ -6,12 +6,13 @@ export class sidebarItem extends Component {
             selected: false,
             notifications: 0,
             page: "",
+            sort: "date",
         });
     }
     connectedCallback() {
         this.render();
         this.addEventListener("click", () => {
-            var _a;
+            var _a, _b;
             document.querySelectorAll("sidebar-item").forEach((e) => {
                 e.selected = false;
             });
@@ -20,7 +21,8 @@ export class sidebarItem extends Component {
                 bubbles: true,
                 detail: {
                     page: this.page,
-                    filter: (_a = this.category) !== null && _a !== void 0 ? _a : "overview",
+                    sort: (_a = this.sort) !== null && _a !== void 0 ? _a : "date",
+                    filter: (_b = this.category) !== null && _b !== void 0 ? _b : "overview",
                 },
             }));
         });

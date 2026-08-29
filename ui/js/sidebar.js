@@ -19,6 +19,9 @@ export async function addSidebarCategories() {
         categoryElement.text = category[0].toUpperCase() + category.slice(1) + "s";
         categoryElement.category = category;
         categoryElement.page = "notifications";
+        if (categoryElement.category === "assignment") {
+            categoryElement.sort = "due";
+        }
         categoryContainer === null || categoryContainer === void 0 ? void 0 : categoryContainer.append(categoryElement);
     }
 }

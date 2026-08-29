@@ -12,6 +12,9 @@ export class PageManager {
         const page = pages[req.page];
         if (req.page === "notifications" && req.filter) {
             page.setFilter(req.filter);
+            if (req.sort) {
+                page.setSort(req.sort);
+            }
         }
         if (page != this.currentPage) {
             (_a = this.currentPage) === null || _a === void 0 ? void 0 : _a.unmount();

@@ -1,9 +1,11 @@
+import { SortType } from "../pages/notifications.js";
 import { Component } from "./component.js";
 
 interface sidebarItemProps {
   text: string;
   selected: boolean;
   notifications: number;
+  sort: SortType;
   page: string;
   category?: string;
 }
@@ -11,6 +13,7 @@ interface sidebarItemProps {
 export class sidebarItem extends Component<sidebarItemProps> {
   declare text: string;
   declare selected: boolean;
+  declare sort: SortType;
   declare page: string;
   declare notifications: number;
   declare category?: string;
@@ -21,6 +24,7 @@ export class sidebarItem extends Component<sidebarItemProps> {
       selected: false,
       notifications: 0,
       page: "",
+      sort: "date",
     });
   }
 
@@ -37,6 +41,7 @@ export class sidebarItem extends Component<sidebarItemProps> {
           bubbles: true,
           detail: {
             page: this.page,
+            sort: this.sort ?? "date",
             filter: this.category ?? "overview",
           },
         }),

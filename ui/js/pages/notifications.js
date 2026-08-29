@@ -21,6 +21,14 @@ export class NotificationPage {
                     break;
                 case "type":
                     comparison = a.category.localeCompare(b.category);
+                    break;
+                case "due":
+                    if (a.category !== "assignment" || b.category !== "assignment") {
+                        comparison = a.timestamp.getTime() - b.timestamp.getTime();
+                    }
+                    else {
+                        comparison = a.dueDate.getTime() - b.dueDate.getTime();
+                    }
             }
             return this.filter.isAscending ? comparison : -comparison;
         });
@@ -42,7 +50,9 @@ export class NotificationPage {
                 case "assignment":
                     card.info = [
                         notification.class,
-                        formatTimestamp(new Date(notification.dueDate)),
+                        notification.dueDate.getTime() > new Date().getTime()
+                            ? "Due " + formatTimestamp(notification.dueDate)
+                            : "Completed " + formatTimestamp(notification.dueDate),
                     ];
                     break;
                 case "message":
@@ -61,6 +71,10 @@ export class NotificationPage {
             }
         }
     }
+    setSort(sort) {
+        this.filter.sort = sort;
+        this.renderNotifications();
+    }
     setFilter(filter) {
         console.log(filter);
         this.filter.type = filter;
@@ -76,7 +90,12 @@ export class NotificationPage {
         }
         const notifications = body;
         this.notifications = notifications;
-        this.notifications.map((notification) => (notification.timestamp = new Date(notification.timestamp)));
+        this.notifications.forEach((notification) => {
+            notification.timestamp = new Date(notification.timestamp);
+            if (notification.category === "assignment") {
+                notification.dueDate = new Date(notification.dueDate);
+            }
+        });
         this.notifications = this.getSortedNotifications();
         this.renderNotifications();
     }

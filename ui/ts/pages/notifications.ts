@@ -2,7 +2,7 @@ import { Page } from "../page-manager";
 import { Notification, NotificationCategory } from "../types";
 import { formatTimestamp } from "../components/notification-card.js";
 
-export type SortType = "date" | "type";
+export type SortType = "date" | "type" | "due";
 
 export interface Filter {
   type: NotificationCategory | "none";
@@ -12,6 +12,7 @@ export interface Filter {
 
 interface NotificationsPage extends Page {
   setFilter(filter: string | "none"): void;
+  setSort(sort: SortType): void;
   fetchNotifications(): Promise<void>;
 }
 
@@ -41,6 +42,13 @@ export class NotificationPage implements NotificationsPage {
           break;
         case "type":
           comparison = a.category.localeCompare(b.category);
+          break;
+        case "due":
+          if (a.category !== "assignment" || b.category !== "assignment") {
+            comparison = a.timestamp.getTime() - b.timestamp.getTime();
+          } else {
+            comparison = a.dueDate.getTime() - b.dueDate.getTime();
+          }
       }
 
       return this.filter.isAscending ? comparison : -comparison;
@@ -70,7 +78,9 @@ export class NotificationPage implements NotificationsPage {
         case "assignment":
           card.info = [
             notification.class,
-            formatTimestamp(new Date(notification.dueDate)),
+            notification.dueDate.getTime() > new Date().getTime()
+              ? "Due " + formatTimestamp(notification.dueDate)
+              : "Completed " + formatTimestamp(notification.dueDate),
           ];
           break;
         case "message":
@@ -97,6 +107,12 @@ export class NotificationPage implements NotificationsPage {
     }
   }
 
+  setSort(sort: SortType) {
+    this.filter.sort = sort;
+
+    this.renderNotifications();
+  }
+
   setFilter(filter: NotificationCategory | "none") {
     console.log(filter);
     this.filter.type = filter;
@@ -118,10 +134,13 @@ export class NotificationPage implements NotificationsPage {
     const notifications = body;
 
     this.notifications = notifications;
-    this.notifications.map(
-      (notification) =>
-        (notification.timestamp = new Date(notification.timestamp)),
-    );
+    this.notifications.forEach((notification) => {
+      notification.timestamp = new Date(notification.timestamp);
+
+      if (notification.category === "assignment") {
+        notification.dueDate = new Date(notification.dueDate);
+      }
+    });
     this.notifications = this.getSortedNotifications();
     this.renderNotifications();
   }

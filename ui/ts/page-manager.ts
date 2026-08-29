@@ -1,5 +1,5 @@
 import { NotificationCategory } from "./types";
-import { NotificationPage } from "./pages/notifications.js";
+import { NotificationPage, SortType } from "./pages/notifications.js";
 
 export type PageName = "notifications" | "plugins";
 
@@ -10,6 +10,7 @@ export const pages: Record<PageName, Page> = {
 
 export interface NavRequest {
   page: PageName;
+  sort?: SortType;
   filter?: NotificationCategory;
 }
 
@@ -28,6 +29,9 @@ export class PageManager {
 
     if (req.page === "notifications" && req.filter) {
       (page as NotificationPage).setFilter(req.filter);
+      if (req.sort) {
+        (page as NotificationPage).setSort(req.sort);
+      }
     }
 
     if (page != this.currentPage) {
