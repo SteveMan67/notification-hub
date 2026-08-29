@@ -147,6 +147,10 @@ export default definePlugin({
 
     let notifications = [];
 
+    if (!assignments || !messages) {
+      return [];
+    }
+
     for (const assignment of assignments.data) {
       const notification: Notification = {
         sourceNotificationId: assignment.assignment_id,

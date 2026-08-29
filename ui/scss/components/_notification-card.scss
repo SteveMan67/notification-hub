@@ -1,0 +1,29 @@
+@use "../base/typography" as *;
+@use "../abstracts/variables" as *;
+
+.notification-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .top {
+    .notification-category {
+      text-transform: uppercase;
+      @include body-bold;
+      color: $muted-text;
+    }
+  }
+
+  .main .notification-title {
+    @include bold-label;
+    margin: 8px 0;
+  }
+
+  .info-container {
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+    color: $muted-text;
+  }
+}

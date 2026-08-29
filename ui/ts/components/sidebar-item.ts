@@ -13,6 +13,7 @@ export class sidebarItem extends Component<sidebarItemProps> {
   declare selected: boolean;
   declare page: string;
   declare notifications: number;
+  declare category?: string;
 
   constructor() {
     super({
@@ -32,10 +33,11 @@ export class sidebarItem extends Component<sidebarItemProps> {
       });
       this.selected = true;
       this.dispatchEvent(
-        new CustomEvent("select", {
+        new CustomEvent("navigate", {
           bubbles: true,
           detail: {
             page: this.page,
+            filter: this.category ?? "overview",
           },
         }),
       );

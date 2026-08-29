@@ -11,14 +11,16 @@ export class sidebarItem extends Component {
     connectedCallback() {
         this.render();
         this.addEventListener("click", () => {
+            var _a;
             document.querySelectorAll("sidebar-item").forEach((e) => {
                 e.selected = false;
             });
             this.selected = true;
-            this.dispatchEvent(new CustomEvent("select", {
+            this.dispatchEvent(new CustomEvent("navigate", {
                 bubbles: true,
                 detail: {
                     page: this.page,
+                    filter: (_a = this.category) !== null && _a !== void 0 ? _a : "overview",
                 },
             }));
         });

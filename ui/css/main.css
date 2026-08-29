@@ -12,6 +12,7 @@ p,
 a,
 span {
   font-family: "Inter", Arial, Helvetica, sans-serif;
+  margin: 0;
 }
 
 .sidebar {
@@ -56,6 +57,33 @@ span {
   color: #2e2e2e;
 }
 
+.notification-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.notification-card .top .notification-category {
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #2e2e2e;
+  font-weight: bold;
+  margin: 0;
+  color: #595959;
+}
+.notification-card .main .notification-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2e2e2e;
+  margin: 8px 0;
+}
+.notification-card .info-container {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  color: #595959;
+}
+
 html {
   width: 100vw;
   height: 100vh;
@@ -83,6 +111,26 @@ body {
 .grid .main-content {
   grid-area: main-content;
   height: 100%;
+  padding: 25px;
+  overflow: scroll;
+}
+
+.title {
+  font-size: 35px;
+  font-weight: bold;
+  color: #2e2e2e;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: scroll;
+}
+#notifications .spacer {
+  border-top: 2px solid #ededed;
 }
 
 /*# sourceMappingURL=main.css.map */

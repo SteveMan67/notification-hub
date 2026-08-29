@@ -1,0 +1,32 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+.title {
+  font-size: 35px;
+  font-weight: bold;
+  color: #2e2e2e;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: scroll;
+}
+#notifications .spacer {
+  border-top: 2px solid #ededed;
+}
+
+/*# sourceMappingURL=notifications.css.map */

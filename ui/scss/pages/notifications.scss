@@ -1,0 +1,19 @@
+@use "../base/typography" as *;
+@use "../abstracts/variables" as *;
+
+.title {
+  @include heading;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: scroll;
+
+  .spacer {
+    border-top: $border-width solid $highlight;
+  }
+}

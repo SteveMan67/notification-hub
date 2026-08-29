@@ -10,10 +10,11 @@ p,
 a,
 span {
   font-family: "Inter", Arial, Helvetica, sans-serif;
+  margin: 0;
 }
 
 @mixin heading {
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
   color: $text;
 }
@@ -49,8 +50,10 @@ span {
 }
 
 @mixin body-bold {
-  font-size: 18px;
+  font-size: 14px;
   color: $text;
+  font-weight: bold;
+  margin: 0;
 }
 
 @mixin body-light {
