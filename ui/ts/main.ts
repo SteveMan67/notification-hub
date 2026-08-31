@@ -13,12 +13,12 @@ if (!pageContainer) {
   throw new Error("Failed to find page container.");
 }
 
+const pageManager = new PageManager(pageContainer as HTMLElement);
+
 document.addEventListener("navigate", async (e) => {
   if (!(e instanceof CustomEvent)) return;
 
   const req = e.detail as NavRequest;
-
-  const pageManager = new PageManager(pageContainer as HTMLElement);
 
   pageManager.show(req);
 });
