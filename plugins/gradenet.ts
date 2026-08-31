@@ -147,7 +147,7 @@ export default definePlugin({
 
     let notifications = [];
 
-    if (!assignments || !messages) {
+    if (!assignments.data || !messages.data) {
       return [];
     }
 
