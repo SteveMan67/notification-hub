@@ -40,6 +40,14 @@ export class NotificationPage {
             return;
         container.innerHTML = "";
         const notifications = this.getSortedNotifications();
+        if (!notifications.length) {
+            const div = document.createElement("div");
+            div.classList.add("no-notifications");
+            div.innerHTML = `
+        <p>Nothing to see here!</p>
+      `;
+            container.appendChild(div);
+        }
         for (let i = 0; i < notifications.length; i++) {
             const notification = notifications[i];
             const card = document.createElement("notification-card");

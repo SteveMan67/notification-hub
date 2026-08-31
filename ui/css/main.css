@@ -132,5 +132,16 @@ body {
 #notifications .spacer {
   border-top: 2px solid #ededed;
 }
+#notifications .no-notifications {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+#notifications .no-notifications p {
+  font-size: 16px;
+  font-weight: normal;
+  color: #2e2e2e;
+}
 
 /*# sourceMappingURL=main.css.map */

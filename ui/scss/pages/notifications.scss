@@ -16,4 +16,14 @@
   .spacer {
     border-top: $border-width solid $highlight;
   }
+
+  .no-notifications {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    p {
+      @include sidebar-label;
+    }
+  }
 }
