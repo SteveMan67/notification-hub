@@ -6,6 +6,37 @@ export const NotificationCategories = [
 
 export type NotificationCategory = (typeof NotificationCategories)[number];
 
+export type SettingType =
+  | "text"
+  | "password"
+  | "number"
+  | "boolean"
+  | "select"
+  | "object-list";
+
+export interface Plugin {
+  id: string;
+  name: string;
+  description?: string;
+  version: string;
+
+  settings: Record<string, PluginSetting>;
+}
+
+export interface PluginSetting {
+  type: SettingType;
+  label: string;
+  description?: string;
+  required?: boolean;
+  secret?: boolean;
+  options?: {
+    label: string;
+    value: string;
+  }[];
+
+  fields?: Record<string, PluginSetting>;
+}
+
 export type NotificationBase = {
   sourceNotificationId: string;
   sourceId: string;
