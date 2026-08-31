@@ -2,6 +2,8 @@ import { db } from "./db/index.ts";
 import { updateNotifications } from "./notification.ts";
 import { initPlugins } from "./plugin.ts";
 import { NotificationCategories } from "./types/index.ts";
+import { plugins } from "./plugin.ts";
+import { pluginResponseItem, pluginsResponse } from "./types/responses.ts";
 
 await initPlugins();
 
@@ -23,6 +25,14 @@ const server = Bun.serve({
       const body = {
         categories: NotificationCategories,
       };
+      return Response.json(body);
+    },
+    "/api/plugins": async () => {
+      const body: pluginsResponse = [];
+
+      plugins.forEach((plugin) => {
+        body.push(plugin.plugin as pluginResponseItem);
+      });
       return Response.json(body);
     },
     "/": Bun.file("./ui/index.html"),
