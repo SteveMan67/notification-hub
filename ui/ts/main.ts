@@ -1,11 +1,15 @@
 import "./components/notification-card.js";
 import "./components/sidebar-item.js";
-import { addSidebarCategories, addSidebarSettings } from "./sidebar.js";
+import { Sidebar } from "./sidebar.js";
 import { NotificationPage } from "./pages/notifications.js";
-import { pages, PageName, NavRequest, PageManager } from "./page-manager.js";
+import { NavRequest, PageManager } from "./page-manager.js";
+import { api } from "./api/api.js";
 
-addSidebarCategories();
-addSidebarSettings();
+const categories = await api.getNotificationCategories();
+
+const sidebar = new Sidebar(categories);
+
+sidebar.initSidebar();
 
 const pageContainer = document.querySelector(".main-content");
 
