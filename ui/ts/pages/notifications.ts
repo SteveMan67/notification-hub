@@ -1,6 +1,7 @@
 import { Page } from "../page-manager";
 import { Notification, NotificationCategory } from "../types";
 import { formatTimestamp } from "../components/notification-card.js";
+import { api } from "../api/api.js";
 
 export type SortType = "date" | "type" | "due";
 
@@ -133,17 +134,7 @@ export class NotificationPage implements NotificationsPage {
   }
 
   async fetchNotifications(): Promise<void> {
-    const response = await fetch("/api/notifications", {
-      method: "GET",
-    });
-
-    const body = await response.json();
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch notifications, " + body.error);
-    }
-
-    const notifications = body;
+    const notifications = await api.getNotifications();
 
     this.notifications = notifications;
     this.notifications.forEach((notification) => {

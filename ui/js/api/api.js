@@ -4,7 +4,7 @@ class NotificationHubApi {
             method: "GET",
         });
         const body = await response.json();
-        return body;
+        return body.categories;
     }
     async getNotifications() {
         const response = await fetch("/api/notifications", {

@@ -1,14 +1,18 @@
 import { Api } from ".";
 import { Notification, NotificationCategory, Plugin } from "../types";
 
+type NotificationCategoryResponse = {
+  categories: string[];
+};
+
 class NotificationHubApi implements Api {
-  async getNotificationCategories(): Promise<NotificationCategory[]> {
+  async getNotificationCategories(): Promise<string[]> {
     const response = await fetch("/api/categories", {
       method: "GET",
     });
 
-    const body = await response.json();
-    return body as NotificationCategory[];
+    const body: NotificationCategoryResponse = await response.json();
+    return body.categories;
   }
 
   async getNotifications(): Promise<Notification[]> {

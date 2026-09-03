@@ -1,4 +1,5 @@
 import { formatTimestamp } from "../components/notification-card.js";
+import { api } from "../api/api.js";
 export class NotificationPage {
     constructor() {
         this.notifications = [];
@@ -89,14 +90,7 @@ export class NotificationPage {
         this.renderNotifications();
     }
     async fetchNotifications() {
-        const response = await fetch("/api/notifications", {
-            method: "GET",
-        });
-        const body = await response.json();
-        if (!response.ok) {
-            throw new Error("Failed to fetch notifications, " + body.error);
-        }
-        const notifications = body;
+        const notifications = await api.getNotifications();
         this.notifications = notifications;
         this.notifications.forEach((notification) => {
             notification.timestamp = new Date(notification.timestamp);
