@@ -30,7 +30,7 @@ export function formatTimestamp(date) {
     });
 }
 export class NotificationCard extends Component {
-    constructor() {
+    constructor(props) {
         super({
             title: "",
             pluginName: "",
