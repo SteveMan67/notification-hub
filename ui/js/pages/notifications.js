@@ -41,6 +41,7 @@ export class NotificationPage {
             return;
         container.innerHTML = "";
         const notifications = this.getSortedNotifications();
+        console.log(notifications.length, this.notifications.length);
         if (!notifications.length) {
             const div = document.createElement("div");
             div.classList.add("no-notifications");
@@ -55,6 +56,7 @@ export class NotificationPage {
             card.title = notification.title;
             card.category = notification.category;
             card.timestamp = notification.timestamp;
+            card.read = notification.read;
             switch (notification.category) {
                 case "assignment":
                     card.info = [
@@ -85,7 +87,6 @@ export class NotificationPage {
         this.renderNotifications();
     }
     setFilter(filter) {
-        console.log(filter);
         this.filter.type = filter;
         this.renderNotifications();
     }
@@ -98,7 +99,6 @@ export class NotificationPage {
                 notification.dueDate = new Date(notification.dueDate);
             }
         });
-        this.notifications = this.getSortedNotifications();
         this.renderNotifications();
     }
     async mount(container) {

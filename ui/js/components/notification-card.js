@@ -37,6 +37,7 @@ export class NotificationCard extends Component {
             category: "",
             info: [],
             timestamp: new Date(),
+            read: false,
         });
     }
     connectedCallback() {
@@ -69,6 +70,7 @@ export class NotificationCard extends Component {
         const pluginName = item.querySelector(".plugin-name");
         const infoContainer = item.querySelector(".info-container");
         const timestamp = item.querySelector(".timestamp");
+        item.classList.toggle("read");
         if (title) {
             title.textContent = this.title;
         }

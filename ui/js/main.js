@@ -1,5 +1,6 @@
 import "./components/notification-card.js";
 import "./components/sidebar-item.js";
+import "./components/plugin-card.js";
 import { Sidebar } from "./sidebar.js";
 import { NotificationPage } from "./pages/notifications.js";
 import { PageManager } from "./page-manager.js";

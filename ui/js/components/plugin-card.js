@@ -8,7 +8,10 @@ export class PluginCard extends Component {
             status: "DISCONNECTED",
         });
     }
-    connectedCallback() { }
+    connectedCallback() {
+        this.render();
+        this.update();
+    }
     render() {
         this.innerHTML = `
       <div class="plugin-card">
