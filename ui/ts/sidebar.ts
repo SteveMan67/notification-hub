@@ -1,5 +1,5 @@
 import type { PageName } from "./page-manager";
-import { api } from "./api/api.js";
+import { sidebarItem } from "./components/sidebar-item.js";
 
 export class Sidebar {
   private categories: string[];
@@ -14,26 +14,29 @@ export class Sidebar {
   }
 
   private async addSidebarCategories() {
-    const categories = await api.getNotificationCategories();
+    const categories = this.categories;
     console.log(categories);
     const categoryContainer = document.querySelector(".category-list");
-    const overviewElement = document.createElement("sidebar-item");
+    const overviewElement = new sidebarItem({
+      text: "Overview",
+      category: "none",
+      page: "notifications",
+      notifications: 0,
+      selected: false,
+      sort: "date",
+    });
 
-    overviewElement.text = "Overview";
     categoryContainer?.append(overviewElement);
-    overviewElement.category = "none";
-    overviewElement.page = "notifications";
-    overviewElement.selected = true;
 
     for (const category of categories) {
-      const categoryElement = document.createElement("sidebar-item");
-      categoryElement.text =
-        category[0].toUpperCase() + category.slice(1) + "s";
-      categoryElement.category = category;
-      categoryElement.page = "notifications" as PageName;
+      const categoryElement = new sidebarItem({
+        text: category[0].toUpperCase() + category.slice(1) + "s",
+        category: category,
+        page: "notifications" as PageName,
+      });
 
-      if (categoryElement.category === "assignment") {
-        categoryElement.sort = "due";
+      if (categoryElement.props.category === "assignment") {
+        categoryElement.props.sort = "due";
       }
       categoryContainer?.append(categoryElement);
     }
@@ -42,14 +45,16 @@ export class Sidebar {
   private async addSidebarSettings() {
     const settingContainer = document.querySelector(".settings-list");
 
-    const pluginButton = document.createElement("sidebar-item");
-    pluginButton.text = "Plugins";
-    pluginButton.page = "plugins";
+    const pluginButton = new sidebarItem({
+      text: "Plugins",
+      page: "plugins",
+    });
     settingContainer?.appendChild(pluginButton);
 
-    const settingButton = document.createElement("sidebar-item");
-    settingButton.text = "Settings";
-    settingButton.page = "settings";
+    const settingButton = new sidebarItem({
+      text: "Settings",
+      page: "settings",
+    });
     settingContainer?.appendChild(settingButton);
   }
 }

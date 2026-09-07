@@ -1,5 +1,5 @@
 import { Api } from ".";
-import { Notification, NotificationCategory, Plugin } from "../types";
+import { Notification, Plugin } from "../types";
 
 type NotificationCategoryResponse = {
   categories: string[];

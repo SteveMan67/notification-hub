@@ -51,22 +51,20 @@ interface NotificationCardProps {
   read: boolean;
 }
 
-export class NotificationCard extends Component<NotificationCardProps> {
-  declare title: string;
-  declare pluginName: string;
-  declare category: string;
-  declare info: string[];
-  declare timestamp: Date;
-  declare read: boolean;
+const defaultNotificationCardProps = {
+  title: "",
+  pluginName: "",
+  category: "",
+  info: [],
+  timestamp: new Date(),
+  read: false,
+} satisfies NotificationCardProps;
 
+export class NotificationCard extends Component<NotificationCardProps> {
   constructor(props: NotificationCardProps) {
     super({
-      title: "",
-      pluginName: "",
-      category: "",
-      info: [],
-      timestamp: new Date(),
-      read: false,
+      ...defaultNotificationCardProps,
+      ...props,
     });
   }
 
@@ -104,30 +102,30 @@ export class NotificationCard extends Component<NotificationCardProps> {
     const infoContainer = item.querySelector(".info-container");
     const timestamp = item.querySelector(".timestamp");
 
-    item.classList.toggle("read");
+    item.classList.toggle("read", this.props.read);
 
     if (title) {
-      title.textContent = this.title;
+      title.textContent = this.props.title;
     }
 
     if (category) {
-      category.textContent = this.category;
+      category.textContent = this.props.category;
     }
 
     if (pluginName) {
-      pluginName.textContent = this.pluginName;
+      pluginName.textContent = this.props.pluginName;
     }
 
     if (timestamp) {
-      timestamp.textContent = formatTimestamp(this.timestamp);
+      timestamp.textContent = formatTimestamp(this.props.timestamp);
     }
 
     if (!infoContainer) return;
 
     infoContainer.innerHTML = "";
 
-    for (let i = 0; i < this.info.length; i++) {
-      const item = this.info[i];
+    for (let i = 0; i < this.props.info.length; i++) {
+      const item = this.props.info[i];
       const p = document.createElement("p");
       p.classList.add("assignment-info");
 
@@ -135,7 +133,7 @@ export class NotificationCard extends Component<NotificationCardProps> {
 
       infoContainer.appendChild(p);
 
-      if (i + 1 !== this.info.length) {
+      if (i + 1 !== this.props.info.length) {
         const spacer = document.createElement("p");
         spacer.innerText = "·";
 

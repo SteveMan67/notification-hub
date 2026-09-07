@@ -1,4 +1,4 @@
-import { NotificationCategory, Notification, Plugin } from "../types";
+import { Notification, Plugin } from "../types";
 
 export interface Api {
   getNotificationCategories(): Promise<string[]>;

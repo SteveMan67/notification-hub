@@ -1,6 +1,5 @@
 import { Page } from "../page-manager";
-import { Notification, NotificationCategory } from "../types";
-import { formatTimestamp } from "../components/notification-card.js";
+import { PluginCard } from "../components/plugin-card";
 import { api } from "../api/api.js";
 import { Plugin } from "../types/index.js";
 
@@ -32,14 +31,12 @@ export class PluginsPage implements IPluginsPage {
 
     for (let i = 0; i < this.plugins.length; i++) {
       const plugin = this.plugins[i];
-      const card = document.createElement("plugin-card");
-
-      card.id = plugin.id;
-      card.title = plugin.name;
-      card.description = plugin.description ?? "";
-      card.status = "CONNECTED";
-
-      console.log(card, container);
+      const card = new PluginCard({
+        id: plugin.id,
+        title: plugin.name,
+        description: plugin.description ?? "",
+        status: "CONNECTED",
+      });
 
       container.appendChild(card);
     }

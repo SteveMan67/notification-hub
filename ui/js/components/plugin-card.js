@@ -1,12 +1,13 @@
 import { Component } from "./component.js";
+const defaultPluginCardProps = {
+    id: "",
+    title: "",
+    description: "",
+    status: "DISCONNECTED",
+};
 export class PluginCard extends Component {
-    constructor() {
-        super({
-            id: "",
-            title: "",
-            description: "",
-            status: "DISCONNECTED",
-        });
+    constructor(props) {
+        super(Object.assign(Object.assign({}, defaultPluginCardProps), props));
     }
     connectedCallback() {
         this.render();
@@ -38,11 +39,11 @@ export class PluginCard extends Component {
         const description = this.querySelector("#description");
         const configure = this.querySelector("#configure");
         if (status)
-            status.textContent = this.status;
+            status.textContent = this.props.status;
         if (title)
-            title.textContent = this.title;
+            title.textContent = this.props.title;
         if (description)
-            description.textContent = this.description;
+            description.textContent = this.props.description;
         if (configure) {
         }
     }

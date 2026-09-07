@@ -9,18 +9,18 @@ interface PluginCardProps {
   status: ConnectedStatus;
 }
 
-export class PluginCard extends Component<PluginCardProps> {
-  declare id: string;
-  declare title: string;
-  declare description: string;
-  declare status: ConnectedStatus;
+const defaultPluginCardProps = {
+  id: "",
+  title: "",
+  description: "",
+  status: "DISCONNECTED",
+} satisfies PluginCardProps;
 
-  constructor() {
+export class PluginCard extends Component<PluginCardProps> {
+  constructor(props: PluginCardProps) {
     super({
-      id: "",
-      title: "",
-      description: "",
-      status: "DISCONNECTED",
+      ...defaultPluginCardProps,
+      ...props,
     });
   }
 
@@ -57,11 +57,11 @@ export class PluginCard extends Component<PluginCardProps> {
     const description = this.querySelector("#description");
     const configure = this.querySelector<HTMLAnchorElement>("#configure");
 
-    if (status) status.textContent = this.status;
+    if (status) status.textContent = this.props.status;
 
-    if (title) title.textContent = this.title;
+    if (title) title.textContent = this.props.title;
 
-    if (description) description.textContent = this.description;
+    if (description) description.textContent = this.props.description;
 
     if (configure) {
     }

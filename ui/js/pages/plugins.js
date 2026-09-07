@@ -1,3 +1,4 @@
+import { PluginCard } from "../components/plugin-card";
 import { api } from "../api/api.js";
 export class PluginsPage {
     constructor() {
@@ -19,12 +20,12 @@ export class PluginsPage {
         }
         for (let i = 0; i < this.plugins.length; i++) {
             const plugin = this.plugins[i];
-            const card = document.createElement("plugin-card");
-            card.id = plugin.id;
-            card.title = plugin.name;
-            card.description = (_a = plugin.description) !== null && _a !== void 0 ? _a : "";
-            card.status = "CONNECTED";
-            console.log(card, container);
+            const card = new PluginCard({
+                id: plugin.id,
+                title: plugin.name,
+                description: (_a = plugin.description) !== null && _a !== void 0 ? _a : "",
+                status: "CONNECTED",
+            });
             container.appendChild(card);
         }
     }

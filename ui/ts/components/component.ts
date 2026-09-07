@@ -1,5 +1,5 @@
 export abstract class Component<T extends object> extends HTMLElement {
-  protected readonly props: T;
+  props: T;
 
   constructor(defaultProps: T) {
     super();

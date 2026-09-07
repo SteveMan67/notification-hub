@@ -1,4 +1,4 @@
-import { formatTimestamp } from "../components/notification-card.js";
+import { formatTimestamp, NotificationCard, } from "../components/notification-card.js";
 import { api } from "../api/api.js";
 export class NotificationPage {
     constructor() {
@@ -52,14 +52,17 @@ export class NotificationPage {
         }
         for (let i = 0; i < notifications.length; i++) {
             const notification = notifications[i];
-            const card = document.createElement("notification-card");
-            card.title = notification.title;
-            card.category = notification.category;
-            card.timestamp = notification.timestamp;
-            card.read = notification.read;
+            const card = new NotificationCard({
+                title: notification.title,
+                category: notification.category,
+                timestamp: notification.timestamp,
+                read: notification.read,
+                pluginName: "",
+                info: [],
+            });
             switch (notification.category) {
                 case "assignment":
-                    card.info = [
+                    card.props.info = [
                         notification.class,
                         notification.dueDate.getTime() > new Date().getTime()
                             ? "Due " + formatTimestamp(notification.dueDate)
@@ -72,7 +75,7 @@ export class NotificationPage {
                         body = body.slice(0, 25) + "...";
                     }
                     body = body.replace(/<[^>]*>/g, "");
-                    card.info = [notification.sender, body];
+                    card.props.info = [notification.sender, body];
             }
             container.appendChild(card);
             if (i + 1 !== notifications.length) {

@@ -10,21 +10,21 @@ interface sidebarItemProps {
   category?: string;
 }
 
-export class sidebarItem extends Component<sidebarItemProps> {
-  declare text: string;
-  declare selected: boolean;
-  declare sort: SortType;
-  declare page: string;
-  declare notifications: number;
-  declare category?: string;
+const defaultSidebarItemProps = {
+  text: "",
+  selected: false,
+  notifications: 0,
+  sort: "date",
+  page: "",
+} satisfies sidebarItemProps;
 
-  constructor() {
+export class sidebarItem extends Component<sidebarItemProps> {
+  // use default values here so you don't have to assign each property when making a new one
+
+  constructor(props: Partial<sidebarItemProps> = {}) {
     super({
-      text: "",
-      selected: false,
-      notifications: 0,
-      page: "",
-      sort: "date",
+      ...defaultSidebarItemProps,
+      ...props,
     });
   }
 
@@ -33,16 +33,16 @@ export class sidebarItem extends Component<sidebarItemProps> {
 
     this.addEventListener("click", () => {
       document.querySelectorAll("sidebar-item").forEach((e) => {
-        e.selected = false;
+        e.props.selected = false;
       });
-      this.selected = true;
+      this.props.selected = true;
       this.dispatchEvent(
         new CustomEvent("navigate", {
           bubbles: true,
           detail: {
-            page: this.page,
-            sort: this.sort ?? "date",
-            filter: this.category ?? "overview",
+            page: this.props.page,
+            sort: this.props.sort ?? "date",
+            filter: this.props.category ?? "overview",
           },
         }),
       );
@@ -68,16 +68,16 @@ export class sidebarItem extends Component<sidebarItemProps> {
     const text = item.querySelector(".text");
 
     if (text) {
-      text.textContent = this.text;
+      text.textContent = this.props.text;
     }
 
     const notifications = item.querySelector("notifications");
 
     if (notifications) {
-      notifications.textContent = String(this.notifications);
+      notifications.textContent = String(this.props.notifications);
     }
 
-    item.classList.toggle("selected", this.selected);
+    item.classList.toggle("selected", this.props.selected);
   }
 }
 
