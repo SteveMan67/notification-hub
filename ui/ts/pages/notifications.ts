@@ -67,6 +67,8 @@ export class NotificationPage implements NotificationsPage {
 
     const notifications = this.getSortedNotifications();
 
+    console.log(notifications.length, this.notifications.length);
+
     if (!notifications.length) {
       const div = document.createElement("div");
 
@@ -128,7 +130,6 @@ export class NotificationPage implements NotificationsPage {
   }
 
   setFilter(filter: NotificationCategory | "none") {
-    console.log(filter);
     this.filter.type = filter;
 
     this.renderNotifications();
@@ -145,7 +146,6 @@ export class NotificationPage implements NotificationsPage {
         notification.dueDate = new Date(notification.dueDate);
       }
     });
-    this.notifications = this.getSortedNotifications();
     this.renderNotifications();
   }
 
