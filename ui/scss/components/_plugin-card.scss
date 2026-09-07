@@ -1,0 +1,35 @@
+@use "../abstracts/variables" as *;
+@use "../base/typography" as *;
+
+.plugin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plugin-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: $border-width solid $highlight;
+  padding: 15px;
+
+  #status {
+    @include body-bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: $muted-text;
+  }
+
+  #title {
+    @include bold-label;
+    margin: 8px 0;
+  }
+
+  .right-info {
+    display: flex;
+    flex-direction: row;
+    @include body-bold;
+  }
+}

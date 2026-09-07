@@ -1,11 +1,12 @@
 import { NotificationCategory } from "./types";
 import { NotificationPage, SortType } from "./pages/notifications.js";
+import { PluginsPage } from "./pages/plugins.js";
 
 export type PageName = "notifications" | "plugins";
 
 export const pages: Record<PageName, Page> = {
   notifications: new NotificationPage(),
-  plugins: new NotificationPage(),
+  plugins: new PluginsPage(),
 };
 
 export interface NavRequest {
@@ -24,6 +25,8 @@ export class PageManager {
 
   constructor(private container: HTMLElement) {}
 
+  // TODO refactor request handling to individual pages
+
   show(req: NavRequest) {
     const page = pages[req.page];
 
@@ -38,6 +41,8 @@ export class PageManager {
       this.currentPage?.unmount();
 
       this.container.innerHTML = "";
+
+      console.log(page);
 
       page.mount(this.container);
 

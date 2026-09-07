@@ -24,7 +24,10 @@ export class PluginCard extends Component<PluginCardProps> {
     });
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    this.render();
+    this.update();
+  }
 
   private render() {
     this.innerHTML = `
