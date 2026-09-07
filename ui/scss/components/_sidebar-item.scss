@@ -2,6 +2,7 @@
 @use "../base/typography" as *;
 
 .sidebar-item {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
 

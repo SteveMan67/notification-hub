@@ -86,6 +86,7 @@ export class NotificationPage implements NotificationsPage {
       card.title = notification.title;
       card.category = notification.category;
       card.timestamp = notification.timestamp;
+      card.read = notification.read;
 
       switch (notification.category) {
         case "assignment":

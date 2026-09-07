@@ -28,6 +28,7 @@ span {
 }
 
 .sidebar-item {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -63,6 +64,9 @@ span {
   justify-content: space-between;
   align-items: center;
 }
+.notification-card.read .main .notification-title {
+  font-weight: normal;
+}
 .notification-card .top .notification-category {
   text-transform: uppercase;
   font-size: 14px;
@@ -82,6 +86,45 @@ span {
   flex-direction: row;
   gap: 7px;
   color: #595959;
+}
+
+.plugin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plugin-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #ededed;
+  padding: 15px;
+}
+.plugin-card #status {
+  font-size: 14px;
+  color: #2e2e2e;
+  font-weight: bold;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #595959;
+}
+.plugin-card #title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2e2e2e;
+  margin: 8px 0;
+}
+.plugin-card .right-info {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  color: #2e2e2e;
+  font-weight: bold;
+  margin: 0;
+  font-size: 16px;
 }
 
 html {

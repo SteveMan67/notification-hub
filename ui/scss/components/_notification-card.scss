@@ -7,6 +7,12 @@
   justify-content: space-between;
   align-items: center;
 
+  &.read {
+    .main .notification-title {
+      font-weight: normal;
+    }
+  }
+
   .top {
     .notification-category {
       text-transform: uppercase;

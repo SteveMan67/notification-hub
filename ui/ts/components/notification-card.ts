@@ -48,6 +48,7 @@ interface NotificationCardProps {
   category: string;
   info: string[];
   timestamp: Date;
+  read: boolean;
 }
 
 export class NotificationCard extends Component<NotificationCardProps> {
@@ -56,14 +57,16 @@ export class NotificationCard extends Component<NotificationCardProps> {
   declare category: string;
   declare info: string[];
   declare timestamp: Date;
+  declare read: boolean;
 
-  constructor() {
+  constructor(props: NotificationCardProps) {
     super({
       title: "",
       pluginName: "",
       category: "",
       info: [],
       timestamp: new Date(),
+      read: false,
     });
   }
 
@@ -100,6 +103,8 @@ export class NotificationCard extends Component<NotificationCardProps> {
     const pluginName = item.querySelector(".plugin-name");
     const infoContainer = item.querySelector(".info-container");
     const timestamp = item.querySelector(".timestamp");
+
+    item.classList.toggle("read");
 
     if (title) {
       title.textContent = this.title;
