@@ -1,4 +1,4 @@
-import { Page } from "../page-manager";
+import { NavRequest, Page } from "../page-manager";
 import { PluginCard } from "../components/plugin-card";
 import { api } from "../api/api.js";
 import { Plugin } from "../types/index.js";
@@ -41,6 +41,8 @@ export class PluginsPage implements IPluginsPage {
       container.appendChild(card);
     }
   }
+
+  navigate(req: NavRequest) {}
 
   async fetchPlugins(): Promise<void> {
     const plugins = await api.getPlugins();

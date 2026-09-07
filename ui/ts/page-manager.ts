@@ -18,6 +18,8 @@ export interface NavRequest {
 export interface Page {
   mount(container: HTMLElement): Promise<void>;
   unmount(): Promise<void>;
+
+  navigate(req: NavRequest): void;
 }
 
 export class PageManager {
@@ -25,17 +27,10 @@ export class PageManager {
 
   constructor(private container: HTMLElement) {}
 
-  // TODO refactor request handling to individual pages
-
   show(req: NavRequest) {
     const page = pages[req.page];
 
-    if (req.page === "notifications" && req.filter) {
-      (page as NotificationPage).setFilter(req.filter);
-      if (req.sort) {
-        (page as NotificationPage).setSort(req.sort);
-      }
-    }
+    page.navigate(req);
 
     if (page != this.currentPage) {
       this.currentPage?.unmount();

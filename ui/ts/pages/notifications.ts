@@ -1,4 +1,4 @@
-import { Page } from "../page-manager";
+import type { Page, NavRequest } from "../page-manager";
 import { Notification, NotificationCategory } from "../types";
 import {
   formatTimestamp,
@@ -138,6 +138,16 @@ export class NotificationPage implements NotificationsPage {
     this.filter.type = filter;
 
     this.renderNotifications();
+  }
+
+  navigate(req: NavRequest) {
+    if (req.sort) {
+      this.setSort(req.sort);
+    }
+
+    if (req.filter) {
+      this.setFilter(req.filter);
+    }
   }
 
   async fetchNotifications(): Promise<void> {

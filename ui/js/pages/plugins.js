@@ -29,6 +29,7 @@ export class PluginsPage {
             container.appendChild(card);
         }
     }
+    navigate(req) { }
     async fetchPlugins() {
         const plugins = await api.getPlugins();
         this.plugins = plugins;

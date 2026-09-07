@@ -93,6 +93,14 @@ export class NotificationPage {
         this.filter.type = filter;
         this.renderNotifications();
     }
+    navigate(req) {
+        if (req.sort) {
+            this.setSort(req.sort);
+        }
+        if (req.filter) {
+            this.setFilter(req.filter);
+        }
+    }
     async fetchNotifications() {
         const notifications = await api.getNotifications();
         this.notifications = notifications;
