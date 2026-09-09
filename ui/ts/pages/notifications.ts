@@ -20,8 +20,14 @@ interface NotificationsPage extends Page {
   fetchNotifications(): Promise<void>;
 }
 
+interface NotificationPageActions {
+  getNotifications(): Promise<Notification[]>;
+}
+
 export class NotificationPage implements NotificationsPage {
   private notifications: Notification[] = [];
+
+  constructor(private actions: NotificationPageActions) {}
 
   private filter: Filter = {
     type: "none",
@@ -151,7 +157,7 @@ export class NotificationPage implements NotificationsPage {
   }
 
   async fetchNotifications(): Promise<void> {
-    const notifications = await api.getNotifications();
+    const notifications = await this.actions.getNotifications();
 
     this.notifications = notifications;
     this.notifications.forEach((notification) => {

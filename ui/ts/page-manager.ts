@@ -4,11 +4,6 @@ import { PluginsPage } from "./pages/plugins.js";
 
 export type PageName = "notifications" | "plugins";
 
-export const pages: Record<PageName, Page> = {
-  notifications: new NotificationPage(),
-  plugins: new PluginsPage(),
-};
-
 export interface NavRequest {
   page: PageName;
   sort?: SortType;
@@ -22,13 +17,22 @@ export interface Page {
   navigate(req: NavRequest): void;
 }
 
+interface PageManagerActions {
+  getNotifications(): Promise<void>;
+}
+
 export class PageManager {
   currentPage?: Page;
+  private readonly container: HTMLElement;
+  private pages: Record<PageName, Page>;
 
-  constructor(private container: HTMLElement) {}
+  constructor(pages: Record<PageName, Page>, container: HTMLElement) {
+    this.pages = pages;
+    this.container = container;
+  }
 
   show(req: NavRequest) {
-    const page = pages[req.page];
+    const page = this.pages[req.page];
 
     page.navigate(req);
 
