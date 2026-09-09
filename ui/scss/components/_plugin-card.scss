@@ -8,6 +8,7 @@
 }
 
 .plugin-card {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -18,13 +19,30 @@
   #status {
     @include body-bold;
     text-transform: uppercase;
-    font-size: 14px;
     color: $muted-text;
   }
 
   #title {
     @include bold-label;
     margin: 8px 0;
+  }
+
+  &:hover .arrow img {
+    display: block;
+  }
+
+  .arrow {
+    width: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+
+    img {
+      aspect-ratio: 1;
+      width: 15px;
+      display: none;
+    }
   }
 
   .right-info {

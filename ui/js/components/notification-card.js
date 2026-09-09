@@ -38,7 +38,7 @@ const defaultNotificationCardProps = {
     read: false,
 };
 export class NotificationCard extends Component {
-    constructor(props) {
+    constructor(props = {}) {
         super(Object.assign(Object.assign({}, defaultNotificationCardProps), props));
     }
     connectedCallback() {

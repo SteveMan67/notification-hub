@@ -61,7 +61,7 @@ const defaultNotificationCardProps = {
 } satisfies NotificationCardProps;
 
 export class NotificationCard extends Component<NotificationCardProps> {
-  constructor(props: NotificationCardProps) {
+  constructor(props: Partial<NotificationCardProps> = {}) {
     super({
       ...defaultNotificationCardProps,
       ...props,

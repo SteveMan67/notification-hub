@@ -40,7 +40,7 @@ export class PluginCard extends Component<PluginCardProps> {
         <div class="right-info">
           <a id="configure">Configure</a>
           <div class="arrow">
-            <img>
+            <img src="/assets/icons/arrow-right.svg">
           </div>
         </div>
       </div>

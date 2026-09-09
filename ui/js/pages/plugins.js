@@ -1,4 +1,4 @@
-import { PluginCard } from "../components/plugin-card";
+import { PluginCard } from "../components/plugin-card.js";
 import { api } from "../api/api.js";
 export class PluginsPage {
     constructor() {

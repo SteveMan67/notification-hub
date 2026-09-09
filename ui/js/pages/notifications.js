@@ -1,7 +1,7 @@
 import { formatTimestamp, NotificationCard, } from "../components/notification-card.js";
-import { api } from "../api/api.js";
 export class NotificationPage {
-    constructor() {
+    constructor(actions) {
+        this.actions = actions;
         this.notifications = [];
         this.filter = {
             type: "none",
@@ -102,7 +102,7 @@ export class NotificationPage {
         }
     }
     async fetchNotifications() {
-        const notifications = await api.getNotifications();
+        const notifications = await this.actions.getNotifications();
         this.notifications = notifications;
         this.notifications.forEach((notification) => {
             notification.timestamp = new Date(notification.timestamp);

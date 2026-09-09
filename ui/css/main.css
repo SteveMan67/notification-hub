@@ -95,6 +95,7 @@ span {
 }
 
 .plugin-card {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -108,7 +109,6 @@ span {
   font-weight: bold;
   margin: 0;
   text-transform: uppercase;
-  font-size: 14px;
   color: #595959;
 }
 .plugin-card #title {
@@ -116,6 +116,21 @@ span {
   font-weight: bold;
   color: #2e2e2e;
   margin: 8px 0;
+}
+.plugin-card:hover .arrow img {
+  display: block;
+}
+.plugin-card .arrow {
+  width: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+}
+.plugin-card .arrow img {
+  aspect-ratio: 1;
+  width: 15px;
+  display: none;
 }
 .plugin-card .right-info {
   display: flex;
