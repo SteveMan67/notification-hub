@@ -1,7 +1,7 @@
 import { PluginCard } from "../components/plugin-card.js";
-import { api } from "../api/api.js";
 export class PluginsPage {
-    constructor() {
+    constructor(actions) {
+        this.actions = actions;
         this.plugins = [];
     }
     renderPlugins() {
@@ -29,9 +29,9 @@ export class PluginsPage {
             container.appendChild(card);
         }
     }
-    navigate(req) { }
+    navigate() { }
     async fetchPlugins() {
-        const plugins = await api.getPlugins();
+        const plugins = await this.actions.getPlugins();
         this.plugins = plugins;
         console.log(plugins);
         this.renderPlugins();

@@ -3,7 +3,7 @@ export class PageManager {
         this.pages = pages;
         this.container = container;
     }
-    show(req) {
+    show(page) {
         var _a;
         const page = this.pages[req.page];
         page.navigate(req);

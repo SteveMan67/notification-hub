@@ -3,6 +3,7 @@ import "./components/sidebar-item.js";
 import "./components/plugin-card.js";
 import { Sidebar } from "./sidebar.js";
 import { NotificationPage } from "./pages/notifications.js";
+import { PluginPage } from "./pages/plugin.js";
 import { PluginsPage } from "./pages/plugins.js";
 import { PageManager } from "./page-manager.js";
 import { api } from "./api/api.js";
@@ -15,7 +16,8 @@ if (!pageContainer) {
 }
 const pages = {
     notifications: new NotificationPage(api),
-    plugins: new PluginsPage(),
+    plugins: new PluginsPage(api),
+    plugin: new PluginPage(),
 };
 const pageManager = new PageManager(pages, pageContainer);
 pageManager.show({
