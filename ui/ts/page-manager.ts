@@ -28,8 +28,8 @@ interface IPageManager {
 
 export class PageManager implements IPageManager {
   currentPage?: Page;
-  private readonly container: HTMLElement;
-  private pages: Record<PageName, Page>;
+  readonly container: HTMLElement;
+  pages: Record<PageName, Page>;
 
   constructor(pages: Record<PageName, Page>, container: HTMLElement) {
     this.pages = pages;
@@ -37,20 +37,18 @@ export class PageManager implements IPageManager {
   }
 
   show(page: PageName) {
-    const page = this.pages[req.page];
+    const pageInstance = this.pages[page];
 
-    page.navigate(req);
-
-    if (page != this.currentPage) {
+    if (pageInstance != this.currentPage) {
       this.currentPage?.unmount();
 
       this.container.innerHTML = "";
 
       console.log(page);
 
-      page.mount(this.container);
+      pageInstance.mount(this.container);
 
-      this.currentPage = page;
+      this.currentPage = pageInstance;
     }
   }
 }
