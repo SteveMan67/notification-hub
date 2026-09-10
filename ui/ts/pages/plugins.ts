@@ -1,14 +1,19 @@
-import { NavRequest, Page } from "../page-manager";
+import { Page } from "../page-manager";
 import { PluginCard } from "../components/plugin-card.js";
-import { api } from "../api/api.js";
 import { Plugin } from "../types/index.js";
 
-interface IPluginsPage extends Page {
-  fetchPlugins(): Promise<void>;
+// the page showing all the plugins at once.
+
+interface IPluginsPage extends Page {}
+
+interface PluginPageActions {
+  getPlugins(): Promise<Plugin[]>;
 }
 
 export class PluginsPage implements IPluginsPage {
   private plugins: Plugin[] = [];
+
+  constructor(private actions: PluginPageActions) {}
 
   private renderPlugins() {
     const container = document.querySelector(".plugin-list");
@@ -42,10 +47,10 @@ export class PluginsPage implements IPluginsPage {
     }
   }
 
-  navigate(req: NavRequest) {}
+  navigate() {}
 
   async fetchPlugins(): Promise<void> {
-    const plugins = await api.getPlugins();
+    const plugins = await this.actions.getPlugins();
 
     this.plugins = plugins;
     console.log(plugins);

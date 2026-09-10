@@ -1,8 +1,9 @@
 import { NotificationCategory } from "./types";
-import { NotificationPage, SortType } from "./pages/notifications.js";
-import { PluginsPage } from "./pages/plugins.js";
+import { SortType } from "./pages/notifications.js";
 
-export type PageName = "notifications" | "plugins";
+// Responsibility: Switch Pages with show()
+
+export type PageName = "notifications" | "plugins" | "plugin";
 
 export interface NavRequest {
   page: PageName;
@@ -17,11 +18,15 @@ export interface Page {
   navigate(req: NavRequest): void;
 }
 
-interface PageManagerActions {
-  getNotifications(): Promise<void>;
+interface IPageManager {
+  currentPage?: Page;
+  container: HTMLElement;
+  pages: Record<PageName, Page>;
+
+  show(page: PageName): void;
 }
 
-export class PageManager {
+export class PageManager implements IPageManager {
   currentPage?: Page;
   private readonly container: HTMLElement;
   private pages: Record<PageName, Page>;
@@ -31,7 +36,7 @@ export class PageManager {
     this.container = container;
   }
 
-  show(req: NavRequest) {
+  show(page: PageName) {
     const page = this.pages[req.page];
 
     page.navigate(req);

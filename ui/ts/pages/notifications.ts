@@ -4,7 +4,6 @@ import {
   formatTimestamp,
   NotificationCard,
 } from "../components/notification-card.js";
-import { api } from "../api/api.js";
 
 export type SortType = "date" | "type" | "due";
 

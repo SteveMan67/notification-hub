@@ -23,7 +23,8 @@ if (!pageContainer) {
 
 const pages: Record<PageName, Page> = {
   notifications: new NotificationPage(api),
-  plugins: new PluginsPage(),
+  plugins: new PluginsPage(api),
+  plugin: new PluginPage(),
 };
 
 const pageManager = new PageManager(pages, pageContainer as HTMLElement);
