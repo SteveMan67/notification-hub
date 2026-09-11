@@ -8,8 +8,6 @@ import { PluginsPage } from "./pages/plugins.js";
 import { PageManager } from "./page-manager.js";
 import { api } from "./api/api.js";
 const categories = await api.getNotificationCategories();
-const sidebar = new Sidebar(categories);
-sidebar.initSidebar();
 const pageContainer = document.querySelector(".main-content");
 if (!pageContainer) {
     throw new Error("Failed to find page container.");
@@ -20,12 +18,6 @@ const pages = {
     plugin: new PluginPage(),
 };
 const pageManager = new PageManager(pages, pageContainer);
-pageManager.show({
-    page: "notifications",
-});
-document.addEventListener("navigate", async (e) => {
-    if (!(e instanceof CustomEvent))
-        return;
-    const req = e.detail;
-    pageManager.show(req);
-});
+const sidebar = new Sidebar(pageManager, categories);
+sidebar.initSidebar();
+pageManager.navigate({ page: "notifications" });

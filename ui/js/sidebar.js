@@ -1,7 +1,11 @@
-import { sidebarItem } from "./components/sidebar-item.js";
+import { sidebarItemFactory, } from "./components/sidebar-item.js";
 export class Sidebar {
-    constructor(categories) {
+    constructor(pageManager, categories) {
+        this.sidebarItemFactory = new sidebarItemFactory(pageManager);
         this.categories = categories;
+    }
+    addSidebarItem(props) {
+        return this.sidebarItemFactory.createSidebarItem(props);
     }
     async initSidebar() {
         this.addSidebarCategories();
@@ -11,17 +15,15 @@ export class Sidebar {
         const categories = this.categories;
         console.log(categories);
         const categoryContainer = document.querySelector(".category-list");
-        const overviewElement = new sidebarItem({
+        const overviewElement = this.addSidebarItem({
             text: "Overview",
-            category: "none",
             page: "notifications",
-            notifications: 0,
-            selected: false,
-            sort: "date",
+            selected: true,
         });
         categoryContainer === null || categoryContainer === void 0 ? void 0 : categoryContainer.append(overviewElement);
         for (const category of categories) {
-            const categoryElement = new sidebarItem({
+            console.log(category);
+            const categoryElement = this.addSidebarItem({
                 text: category[0].toUpperCase() + category.slice(1) + "s",
                 category: category,
                 page: "notifications",
@@ -34,14 +36,13 @@ export class Sidebar {
     }
     async addSidebarSettings() {
         const settingContainer = document.querySelector(".settings-list");
-        const pluginButton = new sidebarItem({
+        const pluginButton = this.addSidebarItem({
             text: "Plugins",
             page: "plugins",
         });
         settingContainer === null || settingContainer === void 0 ? void 0 : settingContainer.appendChild(pluginButton);
-        const settingButton = new sidebarItem({
+        const settingButton = this.addSidebarItem({
             text: "Settings",
-            page: "settings",
         });
         settingContainer === null || settingContainer === void 0 ? void 0 : settingContainer.appendChild(settingButton);
     }

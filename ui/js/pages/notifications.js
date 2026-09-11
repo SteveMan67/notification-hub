@@ -41,7 +41,6 @@ export class NotificationPage {
             return;
         container.innerHTML = "";
         const notifications = this.getSortedNotifications();
-        console.log(notifications.length, this.notifications.length);
         if (!notifications.length) {
             const div = document.createElement("div");
             div.classList.add("no-notifications");
@@ -99,6 +98,9 @@ export class NotificationPage {
         }
         if (req.filter) {
             this.setFilter(req.filter);
+        }
+        else {
+            this.setFilter("none");
         }
     }
     async fetchNotifications() {

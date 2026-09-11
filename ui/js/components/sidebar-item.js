@@ -4,28 +4,34 @@ const defaultSidebarItemProps = {
     selected: false,
     notifications: 0,
     sort: "date",
-    page: "",
+    page: "notifications",
 };
+export class sidebarItemFactory {
+    constructor(pageManager) {
+        this.pageManager = pageManager;
+    }
+    createSidebarItem(props) {
+        return new sidebarItem(this.pageManager, props);
+    }
+}
 export class sidebarItem extends Component {
-    constructor(props = {}) {
+    constructor(pageManager, props = {}) {
         super(Object.assign(Object.assign({}, defaultSidebarItemProps), props));
+        this.pageManager = pageManager;
     }
     connectedCallback() {
         this.render();
         this.addEventListener("click", () => {
-            var _a, _b;
+            var _a;
             document.querySelectorAll("sidebar-item").forEach((e) => {
                 e.props.selected = false;
             });
             this.props.selected = true;
-            this.dispatchEvent(new CustomEvent("navigate", {
-                bubbles: true,
-                detail: {
-                    page: this.props.page,
-                    sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "date",
-                    filter: (_b = this.props.category) !== null && _b !== void 0 ? _b : "overview",
-                },
-            }));
+            this.pageManager.navigate({
+                page: this.props.page,
+                sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "date",
+                filter: this.props.category,
+            });
         });
         this.update();
     }
@@ -38,6 +44,7 @@ export class sidebarItem extends Component {
     `;
     }
     update() {
+        console.log("updating sidebar item");
         const item = this.querySelector(".sidebar-item");
         if (!item)
             return;

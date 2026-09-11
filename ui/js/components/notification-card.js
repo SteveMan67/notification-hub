@@ -87,20 +87,10 @@ export class NotificationCard extends Component {
         if (!infoContainer)
             return;
         infoContainer.innerHTML = "";
-        for (let i = 0; i < this.props.info.length; i++) {
-            const item = this.props.info[i];
-            const p = document.createElement("p");
-            p.classList.add("assignment-info");
-            p.innerHTML = item;
-            infoContainer.appendChild(p);
-            if (i + 1 !== this.props.info.length) {
-                const spacer = document.createElement("p");
-                spacer.innerText = "·";
-                if (infoContainer) {
-                    infoContainer.appendChild(spacer);
-                }
-            }
-        }
+        const p = document.createElement("p");
+        p.classList.add("assignment-info");
+        p.innerHTML = this.props.info.join(" · ");
+        infoContainer.appendChild(p);
     }
 }
 customElements.define("notification-card", NotificationCard);
