@@ -6,14 +6,10 @@ import { NotificationPage } from "./pages/notifications.js";
 import { PluginPage } from "./pages/plugin.js";
 import { PluginsPage } from "./pages/plugins.js";
 import type { PageName, Page } from "./page-manager.js";
-import { NavRequest, PageManager } from "./page-manager.js";
+import { PageManager } from "./page-manager.js";
 import { api } from "./api/api.js";
 
 const categories = await api.getNotificationCategories();
-
-const sidebar = new Sidebar(categories);
-
-sidebar.initSidebar();
 
 const pageContainer = document.querySelector(".main-content");
 
@@ -28,14 +24,9 @@ const pages: Record<PageName, Page> = {
 };
 
 const pageManager = new PageManager(pages, pageContainer as HTMLElement);
-pageManager.show({
-  page: "notifications",
-});
 
-document.addEventListener("navigate", async (e) => {
-  if (!(e instanceof CustomEvent)) return;
+const sidebar = new Sidebar(pageManager, categories);
 
-  const req = e.detail as NavRequest;
+sidebar.initSidebar();
 
-  pageManager.show(req);
-});
+pageManager.navigate({ page: "notifications" });

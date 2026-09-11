@@ -75,8 +75,6 @@ export class NotificationPage implements NotificationsPage {
 
     const notifications = this.getSortedNotifications();
 
-    console.log(notifications.length, this.notifications.length);
-
     if (!notifications.length) {
       const div = document.createElement("div");
 
@@ -152,6 +150,8 @@ export class NotificationPage implements NotificationsPage {
 
     if (req.filter) {
       this.setFilter(req.filter);
+    } else {
+      this.setFilter("none");
     }
   }
 

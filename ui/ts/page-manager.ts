@@ -1,7 +1,7 @@
 import { NotificationCategory } from "./types";
 import { SortType } from "./pages/notifications.js";
 
-// Responsibility: Switch Pages with show()
+// Responsibility: Switch Pages with navigate()
 
 export type PageName = "notifications" | "plugins" | "plugin";
 
@@ -23,7 +23,7 @@ interface IPageManager {
   container: HTMLElement;
   pages: Record<PageName, Page>;
 
-  show(page: PageName): void;
+  navigate(req: NavRequest): void;
 }
 
 export class PageManager implements IPageManager {
@@ -36,19 +36,21 @@ export class PageManager implements IPageManager {
     this.container = container;
   }
 
-  show(page: PageName) {
-    const pageInstance = this.pages[page];
+  navigate(req: NavRequest) {
+    const page = this.pages[req.page];
 
-    if (pageInstance != this.currentPage) {
+    page.navigate(req);
+
+    if (page != this.currentPage) {
       this.currentPage?.unmount();
 
       this.container.innerHTML = "";
 
       console.log(page);
 
-      pageInstance.mount(this.container);
+      page.mount(this.container);
 
-      this.currentPage = pageInstance;
+      this.currentPage = page;
     }
   }
 }
