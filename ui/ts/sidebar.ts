@@ -27,13 +27,16 @@ export class Sidebar {
     const categories = this.categories;
     console.log(categories);
     const categoryContainer = document.querySelector(".category-list");
+
+    if (!categoryContainer) return;
+
     const overviewElement = this.addSidebarItem({
       text: "Overview",
       page: "notifications",
       selected: true,
     });
 
-    categoryContainer?.append(overviewElement);
+    categoryContainer.append(overviewElement);
 
     for (const category of categories) {
       console.log(category);
@@ -46,22 +49,24 @@ export class Sidebar {
       if (categoryElement.props.category === "assignment") {
         categoryElement.props.sort = "due";
       }
-      categoryContainer?.append(categoryElement);
+      categoryContainer.append(categoryElement);
     }
   }
 
   private async addSidebarSettings() {
     const settingContainer = document.querySelector(".settings-list");
 
+    if (!settingContainer) return;
+
     const pluginButton = this.addSidebarItem({
       text: "Plugins",
       page: "plugins",
     });
-    settingContainer?.appendChild(pluginButton);
+    settingContainer.appendChild(pluginButton);
 
     const settingButton = this.addSidebarItem({
       text: "Settings",
     });
-    settingContainer?.appendChild(settingButton);
+    settingContainer.appendChild(settingButton);
   }
 }
