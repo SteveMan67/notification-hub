@@ -25,7 +25,12 @@ const pages: Record<PageName, Page> = {
 
 const pageManager = new PageManager(pages, pageContainer as HTMLElement);
 
-const sidebar = new Sidebar(pageManager, categories);
+const sidebar = new Sidebar(pageManager, [
+  "messageFilter",
+  "emailFilter",
+  "assignmentFilter",
+  "unreadFilter",
+]);
 
 sidebar.initSidebar();
 

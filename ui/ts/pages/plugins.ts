@@ -1,4 +1,4 @@
-import { Page } from "../page-manager";
+import { BaseNavRequest, Page } from "../page-manager";
 import { PluginCard } from "../components/plugin-card.js";
 import { Plugin } from "../types/index.js";
 
@@ -8,6 +8,10 @@ interface IPluginsPage extends Page {}
 
 interface PluginPageActions {
   getPlugins(): Promise<Plugin[]>;
+}
+
+export interface PluginsNavRequest extends BaseNavRequest {
+  page: "plugins";
 }
 
 export class PluginsPage implements IPluginsPage {

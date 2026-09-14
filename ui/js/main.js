@@ -18,6 +18,11 @@ const pages = {
     plugin: new PluginPage(),
 };
 const pageManager = new PageManager(pages, pageContainer);
-const sidebar = new Sidebar(pageManager, categories);
+const sidebar = new Sidebar(pageManager, [
+    "messageFilter",
+    "emailFilter",
+    "assignmentFilter",
+    "unreadFilter",
+]);
 sidebar.initSidebar();
 pageManager.navigate({ page: "notifications" });

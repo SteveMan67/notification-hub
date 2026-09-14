@@ -1,15 +1,23 @@
-import { NotificationCategory } from "./types";
-import { SortType } from "./pages/notifications.js";
+import {
+  NotificationNavRequest,
+  NotificationSort,
+  NotificationFilter,
+} from "./pages/notifications.js";
+import { PluginNavRequest } from "./pages/plugin.js";
+import { PluginsNavRequest } from "./pages/plugins.js";
 
 // Responsibility: Switch Pages with navigate()
 
 export type PageName = "notifications" | "plugins" | "plugin";
 
-export interface NavRequest {
+export interface BaseNavRequest {
   page: PageName;
-  sort?: SortType;
-  filter?: NotificationCategory;
 }
+
+type NavRequest = NotificationNavRequest | PluginsNavRequest | PluginNavRequest;
+
+export type SortType = NotificationSort;
+export type FilterType = NotificationFilter | undefined;
 
 export interface Page {
   mount(container: HTMLElement): Promise<void>;

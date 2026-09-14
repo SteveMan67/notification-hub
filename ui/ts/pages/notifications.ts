@@ -1,67 +1,85 @@
-import type { Page, NavRequest } from "../page-manager";
-import { Notification, NotificationCategory } from "../types";
+import type { BaseNavRequest, Page } from "../page-manager";
+import { Notification } from "../types";
 import {
   formatTimestamp,
   NotificationCard,
 } from "../components/notification-card.js";
-
-export type SortType = "date" | "type" | "due";
-
-export interface Filter {
-  type: NotificationCategory | "none";
-  sort: SortType;
-  isAscending: boolean;
-}
+import { ViewOperation } from "./view-operations";
+import { Sort } from "./view-operations/sort.js";
+import { Filter } from "./view-operations/filter.js";
 
 interface NotificationsPage extends Page {
-  setFilter(filter: string | "none"): void;
-  setSort(sort: SortType): void;
+  setFilter(filter?: NotificationFilter): void;
+  setSort(sort?: NotificationSort): void;
   fetchNotifications(): Promise<void>;
+}
+
+export interface NotificationNavRequest extends BaseNavRequest {
+  page: "notifications";
+  sort?: NotificationSort;
+  filter?: NotificationFilter;
 }
 
 interface NotificationPageActions {
   getNotifications(): Promise<Notification[]>;
 }
 
+interface ActiveOperations {
+  sort: NotificationSort;
+  filter: NotificationFilter | undefined;
+}
+
+export type NotificationSort = "dateSort" | "typeSort" | "dueDateSort";
+export type NotificationFilter =
+  | "messageFilter"
+  | "emailFilter"
+  | "assignmentFilter"
+  | "unreadFilter";
+
+type NotificationOperation = NotificationSort | NotificationFilter;
+
 export class NotificationPage implements NotificationsPage {
   private notifications: Notification[] = [];
+  private activeOperations: ActiveOperations = {
+    sort: "dateSort",
+    filter: undefined,
+  };
+  private operations: Record<
+    NotificationOperation,
+    ViewOperation<Notification[]>
+  > = {
+    dateSort: new Sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+    typeSort: new Sort((a, b) => a.category.localeCompare(b.category)),
+    dueDateSort: new Sort((a, b) => {
+      const aDueDate = a.category === "assignment" ? a.dueDate : undefined;
+      const bDueDate = b.category === "assignment" ? b.dueDate : undefined;
+
+      if (!aDueDate && !bDueDate) return 0;
+      if (!aDueDate) return 1;
+      if (!bDueDate) return -1;
+
+      return aDueDate.getTime() - bDueDate.getTime();
+    }),
+    messageFilter: new Filter((a) => a.category === "message"),
+    emailFilter: new Filter((a) => a.category === "email"),
+    assignmentFilter: new Filter((a) => a.category === "assignment"),
+    unreadFilter: new Filter((a) => !a.read),
+  };
 
   constructor(private actions: NotificationPageActions) {}
 
-  private filter: Filter = {
-    type: "none",
-    sort: "date",
-    isAscending: false,
-  };
+  private applyActiveOperations() {
+    let notifications = this.notifications;
 
-  private getSortedNotifications(): Notification[] {
-    let notifications = this.notifications.filter((notification) => {
-      return (
-        this.filter.type === "none" ||
-        notification.category === this.filter.type
-      );
-    });
+    if (this.activeOperations.filter) {
+      notifications =
+        this.operations[this.activeOperations.filter].apply(notifications);
+    }
 
-    notifications.sort((a, b) => {
-      let comparison: number;
-
-      switch (this.filter.sort) {
-        case "date":
-          comparison = a.timestamp.getTime() - b.timestamp.getTime();
-          break;
-        case "type":
-          comparison = a.category.localeCompare(b.category);
-          break;
-        case "due":
-          if (a.category !== "assignment" || b.category !== "assignment") {
-            comparison = a.timestamp.getTime() - b.timestamp.getTime();
-          } else {
-            comparison = a.dueDate.getTime() - b.dueDate.getTime();
-          }
-      }
-
-      return this.filter.isAscending ? comparison : -comparison;
-    });
+    if (this.activeOperations.sort) {
+      notifications =
+        this.operations[this.activeOperations.sort].apply(notifications);
+    }
 
     return notifications;
   }
@@ -73,7 +91,7 @@ export class NotificationPage implements NotificationsPage {
 
     container.innerHTML = "";
 
-    const notifications = this.getSortedNotifications();
+    const notifications = this.applyActiveOperations();
 
     if (!notifications.length) {
       const div = document.createElement("div");
@@ -131,19 +149,21 @@ export class NotificationPage implements NotificationsPage {
     }
   }
 
-  setSort(sort: SortType) {
-    this.filter.sort = sort;
+  setSort(sort?: NotificationSort) {
+    if (!sort) return;
+
+    this.activeOperations.sort = sort;
 
     this.renderNotifications();
   }
 
-  setFilter(filter: NotificationCategory | "none") {
-    this.filter.type = filter;
+  setFilter(filter?: NotificationFilter) {
+    this.activeOperations.filter = filter;
 
     this.renderNotifications();
   }
 
-  navigate(req: NavRequest) {
+  navigate(req: NotificationNavRequest) {
     if (req.sort) {
       this.setSort(req.sort);
     }
@@ -151,7 +171,7 @@ export class NotificationPage implements NotificationsPage {
     if (req.filter) {
       this.setFilter(req.filter);
     } else {
-      this.setFilter("none");
+      this.setFilter();
     }
   }
 

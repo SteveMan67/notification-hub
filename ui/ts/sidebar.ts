@@ -1,17 +1,25 @@
-import type { PageName, PageManager } from "./page-manager";
+import type { PageName, PageManager, FilterType } from "./page-manager";
 import {
   sidebarItemFactory,
   sidebarItemProps,
 } from "./components/sidebar-item.js";
 import { NotificationCategory } from "./types";
+import { Filter } from "./pages/view-operations/filter";
+
+const filterNames: Record<NonNullable<FilterType>, string> = {
+  assignmentFilter: "Assignments",
+  emailFilter: "Emails",
+  messageFilter: "Messages",
+  unreadFilter: "Unread",
+};
 
 export class Sidebar {
-  private categories: string[];
+  private filters: FilterType[];
   private sidebarItemFactory: sidebarItemFactory;
 
-  constructor(pageManager: PageManager, categories: string[]) {
+  constructor(pageManager: PageManager, filters: FilterType[]) {
     this.sidebarItemFactory = new sidebarItemFactory(pageManager);
-    this.categories = categories;
+    this.filters = filters;
   }
 
   private addSidebarItem(props: Partial<sidebarItemProps>) {
@@ -24,8 +32,7 @@ export class Sidebar {
   }
 
   private async addSidebarCategories() {
-    const categories = this.categories;
-    console.log(categories);
+    const filters = this.filters;
     const categoryContainer = document.querySelector(".category-list");
 
     if (!categoryContainer) return;
@@ -38,18 +45,19 @@ export class Sidebar {
 
     categoryContainer.append(overviewElement);
 
-    for (const category of categories) {
-      console.log(category);
-      const categoryElement = this.addSidebarItem({
-        text: category[0].toUpperCase() + category.slice(1) + "s",
-        category: category as NotificationCategory,
-        page: "notifications" as PageName,
+    for (const filter of filters) {
+      if (!filter) return;
+
+      const filterElement = this.addSidebarItem({
+        text: filterNames[filter],
+        filter: filter,
+        page: "notifications",
       });
 
-      if (categoryElement.props.category === "assignment") {
-        categoryElement.props.sort = "due";
+      if (filterElement.props.filter === "assignmentFilter") {
+        filterElement.props.sort = "dueDateSort";
       }
-      categoryContainer.append(categoryElement);
+      categoryContainer.append(filterElement);
     }
   }
 

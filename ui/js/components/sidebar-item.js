@@ -3,7 +3,7 @@ const defaultSidebarItemProps = {
     text: "",
     selected: false,
     notifications: 0,
-    sort: "date",
+    sort: "dateSort",
     page: "notifications",
 };
 export class sidebarItemFactory {
@@ -29,8 +29,8 @@ export class sidebarItem extends Component {
             this.props.selected = true;
             this.pageManager.navigate({
                 page: this.props.page,
-                sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "date",
-                filter: this.props.category,
+                sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "dateSort",
+                filter: this.props.filter,
             });
         });
         this.update();

@@ -1,5 +1,5 @@
 import { Plugin } from "../types";
-import type { Page } from "../page-manager";
+import type { BaseNavRequest, Page } from "../page-manager";
 import {
   PluginSetting,
   PluginSettingProps,
@@ -7,6 +7,10 @@ import {
 
 export interface PluginPage extends Page {
   loadPlugin(plugin: Plugin): void;
+}
+
+export interface PluginNavRequest extends BaseNavRequest {
+  page: "plugin";
 }
 
 export class PluginPage implements PluginPage {

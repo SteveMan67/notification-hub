@@ -1,38 +1,44 @@
 import { formatTimestamp, NotificationCard, } from "../components/notification-card.js";
+import { Sort } from "./view-operations/sort.js";
+import { Filter } from "./view-operations/filter.js";
 export class NotificationPage {
     constructor(actions) {
         this.actions = actions;
         this.notifications = [];
-        this.filter = {
-            type: "none",
-            sort: "date",
-            isAscending: false,
+        this.activeOperations = {
+            sort: "dateSort",
+            filter: undefined,
+        };
+        this.operations = {
+            dateSort: new Sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+            typeSort: new Sort((a, b) => a.category.localeCompare(b.category)),
+            dueDateSort: new Sort((a, b) => {
+                const aDueDate = a.category === "assignment" ? a.dueDate : undefined;
+                const bDueDate = b.category === "assignment" ? b.dueDate : undefined;
+                if (!aDueDate && !bDueDate)
+                    return 0;
+                if (!aDueDate)
+                    return 1;
+                if (!bDueDate)
+                    return -1;
+                return aDueDate.getTime() - bDueDate.getTime();
+            }),
+            messageFilter: new Filter((a) => a.category === "message"),
+            emailFilter: new Filter((a) => a.category === "email"),
+            assignmentFilter: new Filter((a) => a.category === "assignment"),
+            unreadFilter: new Filter((a) => !a.read),
         };
     }
-    getSortedNotifications() {
-        let notifications = this.notifications.filter((notification) => {
-            return (this.filter.type === "none" ||
-                notification.category === this.filter.type);
-        });
-        notifications.sort((a, b) => {
-            let comparison;
-            switch (this.filter.sort) {
-                case "date":
-                    comparison = a.timestamp.getTime() - b.timestamp.getTime();
-                    break;
-                case "type":
-                    comparison = a.category.localeCompare(b.category);
-                    break;
-                case "due":
-                    if (a.category !== "assignment" || b.category !== "assignment") {
-                        comparison = a.timestamp.getTime() - b.timestamp.getTime();
-                    }
-                    else {
-                        comparison = a.dueDate.getTime() - b.dueDate.getTime();
-                    }
-            }
-            return this.filter.isAscending ? comparison : -comparison;
-        });
+    applyActiveOperations() {
+        let notifications = this.notifications;
+        if (this.activeOperations.filter) {
+            notifications =
+                this.operations[this.activeOperations.filter].apply(notifications);
+        }
+        if (this.activeOperations.sort) {
+            notifications =
+                this.operations[this.activeOperations.sort].apply(notifications);
+        }
         return notifications;
     }
     renderNotifications() {
@@ -40,7 +46,7 @@ export class NotificationPage {
         if (!container)
             return;
         container.innerHTML = "";
-        const notifications = this.getSortedNotifications();
+        const notifications = this.applyActiveOperations();
         if (!notifications.length) {
             const div = document.createElement("div");
             div.classList.add("no-notifications");
@@ -85,11 +91,13 @@ export class NotificationPage {
         }
     }
     setSort(sort) {
-        this.filter.sort = sort;
+        if (!sort)
+            return;
+        this.activeOperations.sort = sort;
         this.renderNotifications();
     }
     setFilter(filter) {
-        this.filter.type = filter;
+        this.activeOperations.filter = filter;
         this.renderNotifications();
     }
     navigate(req) {
@@ -100,7 +108,7 @@ export class NotificationPage {
             this.setFilter(req.filter);
         }
         else {
-            this.setFilter("none");
+            this.setFilter();
         }
     }
     async fetchNotifications() {

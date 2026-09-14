@@ -1,5 +1,4 @@
-import { PageManager } from "../page-manager.js";
-import { SortType } from "../pages/notifications.js";
+import { PageManager, SortType, FilterType } from "../page-manager.js";
 import { Component } from "./component.js";
 import { PageName } from "../page-manager.js";
 import { NotificationCategory } from "../types/index.js";
@@ -8,16 +7,16 @@ export interface sidebarItemProps {
   text: string;
   selected: boolean;
   notifications: number;
-  sort: SortType;
   page: PageName;
-  category?: NotificationCategory;
+  sort?: SortType;
+  filter?: FilterType;
 }
 
 const defaultSidebarItemProps = {
   text: "",
   selected: false,
   notifications: 0,
-  sort: "date",
+  sort: "dateSort",
   page: "notifications",
 } satisfies sidebarItemProps;
 
@@ -52,8 +51,8 @@ export class sidebarItem extends Component<sidebarItemProps> {
       this.props.selected = true;
       this.pageManager.navigate({
         page: this.props.page,
-        sort: this.props.sort ?? "date",
-        filter: this.props.category,
+        sort: this.props.sort ?? "dateSort",
+        filter: this.props.filter,
       });
     });
 

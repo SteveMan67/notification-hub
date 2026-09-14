@@ -1,8 +1,14 @@
 import { sidebarItemFactory, } from "./components/sidebar-item.js";
+const filterNames = {
+    assignmentFilter: "Assignments",
+    emailFilter: "Emails",
+    messageFilter: "Messages",
+    unreadFilter: "Unread",
+};
 export class Sidebar {
-    constructor(pageManager, categories) {
+    constructor(pageManager, filters) {
         this.sidebarItemFactory = new sidebarItemFactory(pageManager);
-        this.categories = categories;
+        this.filters = filters;
     }
     addSidebarItem(props) {
         return this.sidebarItemFactory.createSidebarItem(props);
@@ -12,8 +18,7 @@ export class Sidebar {
         this.addSidebarSettings();
     }
     async addSidebarCategories() {
-        const categories = this.categories;
-        console.log(categories);
+        const filters = this.filters;
         const categoryContainer = document.querySelector(".category-list");
         if (!categoryContainer)
             return;
@@ -23,17 +28,18 @@ export class Sidebar {
             selected: true,
         });
         categoryContainer.append(overviewElement);
-        for (const category of categories) {
-            console.log(category);
-            const categoryElement = this.addSidebarItem({
-                text: category[0].toUpperCase() + category.slice(1) + "s",
-                category: category,
+        for (const filter of filters) {
+            if (!filter)
+                return;
+            const filterElement = this.addSidebarItem({
+                text: filterNames[filter],
+                filter: filter,
                 page: "notifications",
             });
-            if (categoryElement.props.category === "assignment") {
-                categoryElement.props.sort = "due";
+            if (filterElement.props.filter === "assignmentFilter") {
+                filterElement.props.sort = "dueDateSort";
             }
-            categoryContainer.append(categoryElement);
+            categoryContainer.append(filterElement);
         }
     }
     async addSidebarSettings() {
