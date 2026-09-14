@@ -11,6 +11,7 @@ const filterNames: Record<NonNullable<FilterType>, string> = {
   emailFilter: "Emails",
   messageFilter: "Messages",
   unreadFilter: "Unread",
+  uncompletedFilter: "Uncompleted",
 };
 
 export class Sidebar {
@@ -56,6 +57,7 @@ export class Sidebar {
 
       if (filterElement.props.filter === "assignmentFilter") {
         filterElement.props.sort = "dueDateSort";
+        filterElement.props.filter = "uncompletedFilter";
       }
       categoryContainer.append(filterElement);
     }

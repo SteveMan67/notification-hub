@@ -31,6 +31,7 @@ interface ActiveOperations {
 
 export type NotificationSort = "dateSort" | "typeSort" | "dueDateSort";
 export type NotificationFilter =
+  | "uncompletedFilter"
   | "messageFilter"
   | "emailFilter"
   | "assignmentFilter"
@@ -48,7 +49,7 @@ export class NotificationPage implements NotificationsPage {
     NotificationOperation,
     ViewOperation<Notification[]>
   > = {
-    dateSort: new Sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+    dateSort: new Sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()),
     typeSort: new Sort((a, b) => a.category.localeCompare(b.category)),
     dueDateSort: new Sort((a, b) => {
       const aDueDate = a.category === "assignment" ? a.dueDate : undefined;
@@ -60,6 +61,11 @@ export class NotificationPage implements NotificationsPage {
 
       return aDueDate.getTime() - bDueDate.getTime();
     }),
+    uncompletedFilter: new Filter(
+      (a) =>
+        a.category === "assignment" &&
+        a.dueDate.getTime() > new Date().getTime(),
+    ),
     messageFilter: new Filter((a) => a.category === "message"),
     emailFilter: new Filter((a) => a.category === "email"),
     assignmentFilter: new Filter((a) => a.category === "assignment"),

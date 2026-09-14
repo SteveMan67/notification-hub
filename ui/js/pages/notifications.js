@@ -10,7 +10,7 @@ export class NotificationPage {
             filter: undefined,
         };
         this.operations = {
-            dateSort: new Sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+            dateSort: new Sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()),
             typeSort: new Sort((a, b) => a.category.localeCompare(b.category)),
             dueDateSort: new Sort((a, b) => {
                 const aDueDate = a.category === "assignment" ? a.dueDate : undefined;
@@ -23,6 +23,8 @@ export class NotificationPage {
                     return -1;
                 return aDueDate.getTime() - bDueDate.getTime();
             }),
+            uncompletedFilter: new Filter((a) => a.category === "assignment" &&
+                a.dueDate.getTime() > new Date().getTime()),
             messageFilter: new Filter((a) => a.category === "message"),
             emailFilter: new Filter((a) => a.category === "email"),
             assignmentFilter: new Filter((a) => a.category === "assignment"),

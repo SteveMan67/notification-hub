@@ -4,6 +4,7 @@ const filterNames = {
     emailFilter: "Emails",
     messageFilter: "Messages",
     unreadFilter: "Unread",
+    uncompletedFilter: "Uncompleted",
 };
 export class Sidebar {
     constructor(pageManager, filters) {
@@ -38,6 +39,7 @@ export class Sidebar {
             });
             if (filterElement.props.filter === "assignmentFilter") {
                 filterElement.props.sort = "dueDateSort";
+                filterElement.props.filter = "uncompletedFilter";
             }
             categoryContainer.append(filterElement);
         }
