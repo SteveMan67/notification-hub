@@ -35,6 +35,22 @@ const server = Bun.serve({
       });
       return Response.json(body);
     },
+    "/api/plugin": async (req) => {
+      let body: pluginResponseItem | undefined = undefined;
+      const reqBody = await req.json();
+
+      plugins.forEach((plugin) => {
+        if (plugin.plugin.id === reqBody.pluginId) {
+          body = plugin.plugin as pluginResponseItem;
+        }
+      });
+
+      if (body) {
+        return Response.json(body);
+      } else {
+        return new Response("Plugin not found", { status: 404 });
+      }
+    },
     "/": Bun.file("./ui/index.html"),
     "/*": async (req) => {
       const url = new URL(req.url);

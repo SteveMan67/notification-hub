@@ -2,8 +2,6 @@ export const NotificationCategories = [
   "message",
   "email",
   "assignment",
-  "grade",
-  "other",
 ] as const;
 
 export type NotificationCategory = (typeof NotificationCategories)[number];
