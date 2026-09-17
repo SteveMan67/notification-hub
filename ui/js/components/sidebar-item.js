@@ -27,11 +27,18 @@ export class sidebarItem extends Component {
                 e.props.selected = false;
             });
             this.props.selected = true;
-            this.pageManager.navigate({
-                page: this.props.page,
-                sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "dateSort",
-                filter: this.props.filter,
-            });
+            if (this.props.page == "notifications") {
+                this.pageManager.navigate({
+                    page: this.props.page,
+                    sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "dateSort",
+                    filter: this.props.filter,
+                });
+            }
+            else if (this.props.page === "plugins") {
+                this.pageManager.navigate({
+                    page: this.props.page,
+                });
+            }
         });
         this.update();
     }

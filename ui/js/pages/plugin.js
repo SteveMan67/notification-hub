@@ -1,9 +1,23 @@
 import { PluginSetting, } from "../components/plugin-setting.js";
 export class PluginPage {
-    constructor() { }
+    constructor(context) {
+        this.context = context;
+    }
     loadPlugin(plugin) {
         this.plugin = plugin;
         this.updateSettings();
+    }
+    async navigate(req) {
+        const plugin = await this.fetchPlugin(req.pluginId);
+        if (!plugin) {
+            console.log("Error fetching plugin ", req.pluginId);
+            return;
+        }
+        this.loadPlugin(plugin);
+    }
+    async fetchPlugin(pluginId) {
+        const plugin = await this.context.api.getPlugin(pluginId);
+        return plugin;
     }
     updateSettings() {
         if (!this.plugin)

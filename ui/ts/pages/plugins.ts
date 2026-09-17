@@ -1,14 +1,10 @@
-import { BaseNavRequest, Page } from "../page-manager";
+import { BaseNavRequest, Page, PageContext } from "../page-manager";
 import { PluginCard } from "../components/plugin-card.js";
 import { Plugin } from "../types/index.js";
 
 // the page showing all the plugins at once.
 
 interface IPluginsPage extends Page {}
-
-interface PluginPageActions {
-  getPlugins(): Promise<Plugin[]>;
-}
 
 export interface PluginsNavRequest extends BaseNavRequest {
   page: "plugins";
@@ -17,7 +13,7 @@ export interface PluginsNavRequest extends BaseNavRequest {
 export class PluginsPage implements IPluginsPage {
   private plugins: Plugin[] = [];
 
-  constructor(private actions: PluginPageActions) {}
+  constructor(private context: PageContext) {}
 
   private renderPlugins() {
     const container = document.querySelector(".plugin-list");
@@ -40,7 +36,7 @@ export class PluginsPage implements IPluginsPage {
 
     for (let i = 0; i < this.plugins.length; i++) {
       const plugin = this.plugins[i];
-      const card = new PluginCard({
+      const card = new PluginCard(this.context.pageManager, {
         id: plugin.id,
         title: plugin.name,
         description: plugin.description ?? "",
@@ -54,7 +50,7 @@ export class PluginsPage implements IPluginsPage {
   navigate() {}
 
   async fetchPlugins(): Promise<void> {
-    const plugins = await this.actions.getPlugins();
+    const plugins = await this.context.api.getPlugins();
 
     this.plugins = plugins;
     console.log(plugins);

@@ -1,4 +1,4 @@
-import type { BaseNavRequest, Page } from "../page-manager";
+import type { BaseNavRequest, Page, PageContext } from "../page-manager";
 import { Notification } from "../types";
 import {
   formatTimestamp,
@@ -18,10 +18,6 @@ export interface NotificationNavRequest extends BaseNavRequest {
   page: "notifications";
   sort?: NotificationSort;
   filter?: NotificationFilter;
-}
-
-interface NotificationPageActions {
-  getNotifications(): Promise<Notification[]>;
 }
 
 interface ActiveOperations {
@@ -72,7 +68,7 @@ export class NotificationPage implements NotificationsPage {
     unreadFilter: new Filter((a) => !a.read),
   };
 
-  constructor(private actions: NotificationPageActions) {}
+  constructor(private context: PageContext) {}
 
   private applyActiveOperations() {
     let notifications = this.notifications;
@@ -182,7 +178,7 @@ export class NotificationPage implements NotificationsPage {
   }
 
   async fetchNotifications(): Promise<void> {
-    const notifications = await this.actions.getNotifications();
+    const notifications = await this.context.api.getNotifications();
 
     this.notifications = notifications;
     this.notifications.forEach((notification) => {

@@ -2,8 +2,8 @@ import { formatTimestamp, NotificationCard, } from "../components/notification-c
 import { Sort } from "./view-operations/sort.js";
 import { Filter } from "./view-operations/filter.js";
 export class NotificationPage {
-    constructor(actions) {
-        this.actions = actions;
+    constructor(context) {
+        this.context = context;
         this.notifications = [];
         this.activeOperations = {
             sort: "dateSort",
@@ -114,7 +114,7 @@ export class NotificationPage {
         }
     }
     async fetchNotifications() {
-        const notifications = await this.actions.getNotifications();
+        const notifications = await this.context.api.getNotifications();
         this.notifications = notifications;
         this.notifications.forEach((notification) => {
             notification.timestamp = new Date(notification.timestamp);

@@ -6,11 +6,20 @@ const defaultPluginCardProps = {
     status: "DISCONNECTED",
 };
 export class PluginCard extends Component {
-    constructor(props) {
+    constructor(pageManager, props) {
         super(Object.assign(Object.assign({}, defaultPluginCardProps), props));
+        this.pageManager = pageManager;
     }
     connectedCallback() {
         this.render();
+        this.addEventListener("click", () => {
+            if (this.props.id) {
+                this.pageManager.navigate({
+                    page: "plugin",
+                    pluginId: this.props.id,
+                });
+            }
+        });
         this.update();
     }
     render() {

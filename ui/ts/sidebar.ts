@@ -1,10 +1,8 @@
-import type { PageName, PageManager, FilterType } from "./page-manager";
+import type { PageManager, FilterType } from "./page-manager";
 import {
   sidebarItemFactory,
   sidebarItemProps,
 } from "./components/sidebar-item.js";
-import { NotificationCategory } from "./types";
-import { Filter } from "./pages/view-operations/filter";
 
 const filterNames: Record<NonNullable<FilterType>, string> = {
   assignmentFilter: "Assignments",

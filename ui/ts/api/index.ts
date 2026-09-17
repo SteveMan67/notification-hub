@@ -4,4 +4,5 @@ export interface Api {
   getNotificationCategories(): Promise<string[]>;
   getNotifications(): Promise<Notification[]>;
   getPlugins(): Promise<Plugin[]>;
+  getPlugin(pluginId: string): Promise<Plugin | undefined>;
 }

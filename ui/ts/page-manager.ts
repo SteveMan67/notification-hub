@@ -3,8 +3,10 @@ import {
   NotificationSort,
   NotificationFilter,
 } from "./pages/notifications.js";
-import { PluginNavRequest } from "./pages/plugin.js";
-import { PluginsNavRequest } from "./pages/plugins.js";
+import { PluginNavRequest, PluginPage } from "./pages/plugin.js";
+import { PluginsNavRequest, PluginsPage } from "./pages/plugins.js";
+import { NotificationPage } from "./pages/notifications.js";
+import { Context } from "./main.js";
 
 // Responsibility: Switch Pages with navigate()
 
@@ -14,7 +16,10 @@ export interface BaseNavRequest {
   page: PageName;
 }
 
-type NavRequest = NotificationNavRequest | PluginsNavRequest | PluginNavRequest;
+export type NavRequest =
+  | NotificationNavRequest
+  | PluginsNavRequest
+  | PluginNavRequest;
 
 export type SortType = NotificationSort;
 export type FilterType = NotificationFilter | undefined;
@@ -24,6 +29,10 @@ export interface Page {
   unmount(): Promise<void>;
 
   navigate(req: NavRequest): void;
+}
+
+export interface PageContext extends Context {
+  pageManager: PageManager;
 }
 
 interface IPageManager {
@@ -39,9 +48,22 @@ export class PageManager implements IPageManager {
   readonly container: HTMLElement;
   pages: Record<PageName, Page>;
 
-  constructor(pages: Record<PageName, Page>, container: HTMLElement) {
-    this.pages = pages;
+  constructor(
+    container: HTMLElement,
+    private context: Partial<Context>,
+  ) {
     this.container = container;
+
+    const pageContext = {
+      ...(this.context as Context),
+      pageManager: this,
+    };
+
+    this.pages = {
+      notifications: new NotificationPage(pageContext),
+      plugins: new PluginsPage(pageContext),
+      plugin: new PluginPage(pageContext),
+    };
   }
 
   navigate(req: NavRequest) {

@@ -1,26 +1,40 @@
 import { Plugin } from "../types";
-import type { BaseNavRequest, Page } from "../page-manager";
+import type { BaseNavRequest, Page, PageContext } from "../page-manager";
 import {
   PluginSetting,
   PluginSettingProps,
 } from "../components/plugin-setting.js";
 
-export interface PluginPage extends Page {
-  loadPlugin(plugin: Plugin): void;
-}
+export interface PluginPage extends Page {}
 
 export interface PluginNavRequest extends BaseNavRequest {
   page: "plugin";
+  pluginId: string;
 }
 
 export class PluginPage implements PluginPage {
   private plugin?: Plugin;
 
-  constructor() {}
+  constructor(private context: PageContext) {}
 
-  loadPlugin(plugin: Plugin) {
+  private loadPlugin(plugin: Plugin) {
     this.plugin = plugin;
     this.updateSettings();
+  }
+
+  async navigate(req: PluginNavRequest) {
+    const plugin = await this.fetchPlugin(req.pluginId);
+    if (!plugin) {
+      console.log("Error fetching plugin ", req.pluginId);
+      return;
+    }
+    this.loadPlugin(plugin);
+  }
+
+  async fetchPlugin(pluginId: string): Promise<Plugin | undefined> {
+    const plugin = await this.context.api.getPlugin(pluginId);
+
+    return plugin;
   }
 
   private updateSettings() {

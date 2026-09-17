@@ -1,7 +1,16 @@
+import { PluginPage } from "./pages/plugin.js";
+import { PluginsPage } from "./pages/plugins.js";
+import { NotificationPage } from "./pages/notifications.js";
 export class PageManager {
-    constructor(pages, container) {
-        this.pages = pages;
+    constructor(container, context) {
+        this.context = context;
         this.container = container;
+        const pageContext = Object.assign(Object.assign({}, this.context), { pageManager: this });
+        this.pages = {
+            notifications: new NotificationPage(pageContext),
+            plugins: new PluginsPage(pageContext),
+            plugin: new PluginPage(pageContext),
+        };
     }
     navigate(req) {
         var _a;

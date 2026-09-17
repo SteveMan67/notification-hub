@@ -1,3 +1,4 @@
+import { PageManager, SortType, FilterType } from "../page-manager.js";
 import { Component } from "./component.js";
 
 type ConnectedStatus = "CONNECTED" | "DISCONNECTED";
@@ -17,7 +18,10 @@ const defaultPluginCardProps = {
 } satisfies PluginCardProps;
 
 export class PluginCard extends Component<PluginCardProps> {
-  constructor(props: PluginCardProps) {
+  constructor(
+    private pageManager: PageManager,
+    props: PluginCardProps,
+  ) {
     super({
       ...defaultPluginCardProps,
       ...props,
@@ -26,6 +30,15 @@ export class PluginCard extends Component<PluginCardProps> {
 
   connectedCallback() {
     this.render();
+
+    this.addEventListener("click", () => {
+      if (this.props.id) {
+        this.pageManager.navigate({
+          page: "plugin",
+          pluginId: this.props.id,
+        });
+      }
+    });
     this.update();
   }
 

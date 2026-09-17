@@ -5,7 +5,7 @@ type NotificationCategoryResponse = {
   categories: string[];
 };
 
-class NotificationHubApi implements Api {
+export class NotificationHubApi implements Api {
   async getNotificationCategories(): Promise<string[]> {
     const response = await fetch("/api/categories", {
       method: "GET",
@@ -29,6 +29,22 @@ class NotificationHubApi implements Api {
     });
     const body = await response.json();
     return body as Plugin[];
+  }
+
+  async getPlugin(pluginId: string): Promise<Plugin | undefined> {
+    const response = await fetch("/api/plugin", {
+      method: "POST",
+      body: JSON.stringify({
+        pluginId: pluginId,
+      }),
+    });
+
+    if (response.ok) {
+      const body = await response.json();
+
+      return body as Plugin;
+    }
+    return;
   }
 }
 

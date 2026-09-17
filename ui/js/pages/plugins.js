@@ -1,7 +1,7 @@
 import { PluginCard } from "../components/plugin-card.js";
 export class PluginsPage {
-    constructor(actions) {
-        this.actions = actions;
+    constructor(context) {
+        this.context = context;
         this.plugins = [];
     }
     renderPlugins() {
@@ -20,7 +20,7 @@ export class PluginsPage {
         }
         for (let i = 0; i < this.plugins.length; i++) {
             const plugin = this.plugins[i];
-            const card = new PluginCard({
+            const card = new PluginCard(this.context.pageManager, {
                 id: plugin.id,
                 title: plugin.name,
                 description: (_a = plugin.description) !== null && _a !== void 0 ? _a : "",
@@ -31,7 +31,7 @@ export class PluginsPage {
     }
     navigate() { }
     async fetchPlugins() {
-        const plugins = await this.actions.getPlugins();
+        const plugins = await this.context.api.getPlugins();
         this.plugins = plugins;
         console.log(plugins);
         this.renderPlugins();
