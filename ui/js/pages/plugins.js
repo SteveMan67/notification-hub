@@ -20,7 +20,7 @@ export class PluginsPage {
         }
         for (let i = 0; i < this.plugins.length; i++) {
             const plugin = this.plugins[i];
-            const card = new PluginCard(this.context.pageManager, {
+            const card = new PluginCard(this.context.nav, {
                 id: plugin.id,
                 title: plugin.name,
                 description: (_a = plugin.description) !== null && _a !== void 0 ? _a : "",

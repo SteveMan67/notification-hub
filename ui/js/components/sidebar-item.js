@@ -7,37 +7,30 @@ const defaultSidebarItemProps = {
     page: "notifications",
 };
 export class sidebarItemFactory {
-    constructor(pageManager) {
-        this.pageManager = pageManager;
+    constructor(nav) {
+        this.nav = nav;
     }
     createSidebarItem(props) {
-        return new sidebarItem(this.pageManager, props);
+        return new sidebarItem(this.nav, props);
     }
 }
 export class sidebarItem extends Component {
-    constructor(pageManager, props = {}) {
+    constructor(nav, props = {}) {
         super(Object.assign(Object.assign({}, defaultSidebarItemProps), props));
-        this.pageManager = pageManager;
+        this.nav = nav;
     }
     connectedCallback() {
         this.render();
         this.addEventListener("click", () => {
-            var _a;
             document.querySelectorAll("sidebar-item").forEach((e) => {
                 e.props.selected = false;
             });
             this.props.selected = true;
             if (this.props.page == "notifications") {
-                this.pageManager.navigate({
-                    page: this.props.page,
-                    sort: (_a = this.props.sort) !== null && _a !== void 0 ? _a : "dateSort",
-                    filter: this.props.filter,
-                });
+                this.nav.notifications(this.props.sort, this.props.filter);
             }
             else if (this.props.page === "plugins") {
-                this.pageManager.navigate({
-                    page: this.props.page,
-                });
+                this.nav.plugins();
             }
         });
         this.update();

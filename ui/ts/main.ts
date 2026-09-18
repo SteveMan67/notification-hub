@@ -7,7 +7,6 @@ import { PageManager } from "./page-manager.js";
 
 export interface Context {
   api: NotificationHubApi;
-  pageManager: PageManager;
 }
 
 const pageContainer = document.querySelector(".main-content");

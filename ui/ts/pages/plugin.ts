@@ -17,27 +17,46 @@ export class PluginPage implements PluginPage {
 
   constructor(private context: PageContext) {}
 
-  private loadPlugin(plugin: Plugin) {
+  private async loadPlugin(pluginId: string) {
+    const plugin = await this.fetchPlugin(pluginId);
+    if (!plugin) {
+      console.log("Error fetching plugin ", pluginId);
+      return;
+    }
     this.plugin = plugin;
-    this.updateSettings();
+    this.render();
   }
 
   async navigate(req: PluginNavRequest) {
-    const plugin = await this.fetchPlugin(req.pluginId);
-    if (!plugin) {
-      console.log("Error fetching plugin ", req.pluginId);
-      return;
-    }
-    this.loadPlugin(plugin);
+    await this.loadPlugin(req.pluginId);
   }
 
-  async fetchPlugin(pluginId: string): Promise<Plugin | undefined> {
+  private async fetchPlugin(pluginId: string): Promise<Plugin | undefined> {
     const plugin = await this.context.api.getPlugin(pluginId);
 
     return plugin;
   }
 
+  private render() {
+    const container = document.querySelector(".plugin-page");
+
+    console.log(container);
+
+    if (!container || !this.plugin) return;
+
+    const title = container.querySelector(".title");
+    const description = container.querySelector(".description");
+
+    if (title) title.innerHTML = this.plugin.name;
+    if (description && this.plugin.description) {
+      description.innerHTML = this.plugin.description;
+    }
+
+    this.updateSettings();
+  }
+
   private updateSettings() {
+    console.log(this.plugin, "updating settings");
     if (!this.plugin) return;
     const settings = this.plugin.settings;
 
@@ -60,8 +79,7 @@ export class PluginPage implements PluginPage {
     if (!response.ok) return;
 
     container.innerHTML = await response.text();
-
-    this.updateSettings();
+    return;
   }
 
   async unmount() {}

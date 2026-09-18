@@ -7,6 +7,7 @@ import { PluginNavRequest, PluginPage } from "./pages/plugin.js";
 import { PluginsNavRequest, PluginsPage } from "./pages/plugins.js";
 import { NotificationPage } from "./pages/notifications.js";
 import { Context } from "./main.js";
+import { Nav } from "./navigation.js";
 
 // Responsibility: Switch Pages with navigate()
 
@@ -32,7 +33,7 @@ export interface Page {
 }
 
 export interface PageContext extends Context {
-  pageManager: PageManager;
+  nav: Nav;
 }
 
 interface IPageManager {
@@ -47,16 +48,19 @@ export class PageManager implements IPageManager {
   currentPage?: Page;
   readonly container: HTMLElement;
   pages: Record<PageName, Page>;
+  private nav: Nav;
 
   constructor(
     container: HTMLElement,
-    private context: Partial<Context>,
+    private context: Context,
   ) {
     this.container = container;
 
-    const pageContext = {
+    this.nav = new Nav(this);
+
+    const pageContext: PageContext = {
       ...(this.context as Context),
-      pageManager: this,
+      nav: this.nav,
     };
 
     this.pages = {
@@ -66,21 +70,21 @@ export class PageManager implements IPageManager {
     };
   }
 
-  navigate(req: NavRequest) {
+  async navigate(req: NavRequest) {
     const page = this.pages[req.page];
-
-    page.navigate(req);
 
     if (page != this.currentPage) {
       this.currentPage?.unmount();
 
       this.container.innerHTML = "";
 
-      console.log(page);
-
-      page.mount(this.container);
+      console.log("mounting");
+      await page.mount(this.container);
 
       this.currentPage = page;
     }
+
+    console.log("navigating");
+    page.navigate(req);
   }
 }

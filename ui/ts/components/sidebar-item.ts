@@ -1,7 +1,7 @@
-import { PageManager, SortType, FilterType } from "../page-manager.js";
+import { SortType, FilterType } from "../page-manager.js";
 import { Component } from "./component.js";
 import { PageName } from "../page-manager.js";
-import { NotificationCategory } from "../types/index.js";
+import { Nav } from "../navigation.js";
 
 export interface sidebarItemProps {
   text: string;
@@ -21,24 +21,23 @@ const defaultSidebarItemProps = {
 } satisfies sidebarItemProps;
 
 export class sidebarItemFactory {
-  constructor(private pageManager: PageManager) {}
+  constructor(private nav: Nav) {}
 
   createSidebarItem(props: Partial<sidebarItemProps>): sidebarItem {
-    return new sidebarItem(this.pageManager, props);
+    return new sidebarItem(this.nav, props);
   }
 }
 
 export class sidebarItem extends Component<sidebarItemProps> {
   // use default values here so you don't have to assign each property when making a new one
-  private pageManager: PageManager;
-
-  constructor(pageManager: PageManager, props: Partial<sidebarItemProps> = {}) {
+  constructor(
+    private nav: Nav,
+    props: Partial<sidebarItemProps> = {},
+  ) {
     super({
       ...defaultSidebarItemProps,
       ...props,
     });
-
-    this.pageManager = pageManager;
   }
 
   connectedCallback() {
@@ -50,15 +49,9 @@ export class sidebarItem extends Component<sidebarItemProps> {
       });
       this.props.selected = true;
       if (this.props.page == "notifications") {
-        this.pageManager.navigate({
-          page: this.props.page,
-          sort: this.props.sort ?? "dateSort",
-          filter: this.props.filter,
-        });
+        this.nav.notifications(this.props.sort, this.props.filter);
       } else if (this.props.page === "plugins") {
-        this.pageManager.navigate({
-          page: this.props.page,
-        });
+        this.nav.plugins();
       }
     });
 

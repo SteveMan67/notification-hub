@@ -1,4 +1,4 @@
-import { PageManager, SortType, FilterType } from "../page-manager.js";
+import { Nav } from "../navigation.js";
 import { Component } from "./component.js";
 
 type ConnectedStatus = "CONNECTED" | "DISCONNECTED";
@@ -19,7 +19,7 @@ const defaultPluginCardProps = {
 
 export class PluginCard extends Component<PluginCardProps> {
   constructor(
-    private pageManager: PageManager,
+    private nav: Nav,
     props: PluginCardProps,
   ) {
     super({
@@ -33,10 +33,7 @@ export class PluginCard extends Component<PluginCardProps> {
 
     this.addEventListener("click", () => {
       if (this.props.id) {
-        this.pageManager.navigate({
-          page: "plugin",
-          pluginId: this.props.id,
-        });
+        this.nav.plugin(this.props.id);
       }
     });
     this.update();

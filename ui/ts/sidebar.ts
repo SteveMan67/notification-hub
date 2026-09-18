@@ -3,6 +3,7 @@ import {
   sidebarItemFactory,
   sidebarItemProps,
 } from "./components/sidebar-item.js";
+import { Nav } from "./navigation.js";
 
 const filterNames: Record<NonNullable<FilterType>, string> = {
   assignmentFilter: "Assignments",
@@ -17,7 +18,7 @@ export class Sidebar {
   private sidebarItemFactory: sidebarItemFactory;
 
   constructor(pageManager: PageManager, filters: FilterType[]) {
-    this.sidebarItemFactory = new sidebarItemFactory(pageManager);
+    this.sidebarItemFactory = new sidebarItemFactory(new Nav(pageManager));
     this.filters = filters;
   }
 

@@ -1,4 +1,5 @@
 import { sidebarItemFactory, } from "./components/sidebar-item.js";
+import { Nav } from "./navigation.js";
 const filterNames = {
     assignmentFilter: "Assignments",
     emailFilter: "Emails",
@@ -8,7 +9,7 @@ const filterNames = {
 };
 export class Sidebar {
     constructor(pageManager, filters) {
-        this.sidebarItemFactory = new sidebarItemFactory(pageManager);
+        this.sidebarItemFactory = new sidebarItemFactory(new Nav(pageManager));
         this.filters = filters;
     }
     addSidebarItem(props) {

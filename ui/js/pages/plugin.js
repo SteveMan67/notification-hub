@@ -3,23 +3,38 @@ export class PluginPage {
     constructor(context) {
         this.context = context;
     }
-    loadPlugin(plugin) {
-        this.plugin = plugin;
-        this.updateSettings();
-    }
-    async navigate(req) {
-        const plugin = await this.fetchPlugin(req.pluginId);
+    async loadPlugin(pluginId) {
+        const plugin = await this.fetchPlugin(pluginId);
         if (!plugin) {
-            console.log("Error fetching plugin ", req.pluginId);
+            console.log("Error fetching plugin ", pluginId);
             return;
         }
-        this.loadPlugin(plugin);
+        this.plugin = plugin;
+        this.render();
+    }
+    async navigate(req) {
+        await this.loadPlugin(req.pluginId);
     }
     async fetchPlugin(pluginId) {
         const plugin = await this.context.api.getPlugin(pluginId);
         return plugin;
     }
+    render() {
+        const container = document.querySelector(".plugin-page");
+        console.log(container);
+        if (!container || !this.plugin)
+            return;
+        const title = container.querySelector(".title");
+        const description = container.querySelector(".description");
+        if (title)
+            title.innerHTML = this.plugin.name;
+        if (description && this.plugin.description) {
+            description.innerHTML = this.plugin.description;
+        }
+        this.updateSettings();
+    }
     updateSettings() {
+        console.log(this.plugin, "updating settings");
         if (!this.plugin)
             return;
         const settings = this.plugin.settings;
@@ -37,7 +52,7 @@ export class PluginPage {
         if (!response.ok)
             return;
         container.innerHTML = await response.text();
-        this.updateSettings();
+        return;
     }
     async unmount() { }
 }

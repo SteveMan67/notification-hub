@@ -36,7 +36,7 @@ export class PluginsPage implements IPluginsPage {
 
     for (let i = 0; i < this.plugins.length; i++) {
       const plugin = this.plugins[i];
-      const card = new PluginCard(this.context.pageManager, {
+      const card = new PluginCard(this.context.nav, {
         id: plugin.id,
         title: plugin.name,
         description: plugin.description ?? "",
