@@ -1,4 +1,5 @@
 import type { BaseNavRequest, Page, PageContext } from "../page-manager";
+import template from "../../pages/notifications.html" with { type: "text" };
 import { Notification } from "../types";
 import {
   formatTimestamp,
@@ -192,14 +193,7 @@ export class NotificationPage implements NotificationsPage {
   }
 
   async mount(container: HTMLElement) {
-    const response = await fetch("/pages/notifications.html");
-
-    if (!response.ok) {
-      throw new Error("Failed to load Notifications Page: " + response.status);
-    }
-
-    container.innerHTML = await response.text();
-
+    container.innerHTML = template as unknown as string;
     await this.fetchNotifications();
   }
 

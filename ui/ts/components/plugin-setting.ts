@@ -52,6 +52,11 @@ export class PluginSetting extends Component<PluginSettingProps> {
     super(props);
   }
 
+  connectedCallback() {
+    this.render();
+    this.update();
+  }
+
   private render() {
     this.innerHTML = `
     <div class="plugin-setting">
@@ -120,11 +125,9 @@ export class PluginSetting extends Component<PluginSettingProps> {
         const fieldsContainer = document.createElement("div");
         fieldsContainer.classList.add("fields");
         inputContainer.appendChild(fieldsContainer);
-        this.props.fields.forEach((field) => {
-          fieldsContainer.appendChild(new PluginSetting(field));
-        });
-
       // add plus button for adding new groups of fields
     }
   }
 }
+
+customElements.define("plugin-setting", PluginSetting);

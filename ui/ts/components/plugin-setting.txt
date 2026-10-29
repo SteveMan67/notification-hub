@@ -1,0 +1,48 @@
+What is this class for?
+  It handles the plugin setting component and it's properties, and rendering the component. It also calls a callback when it's information is changed. It handles event listeners for input.
+
+What information does it own?
+  It owns the properties of the component, and the current displayed value.
+
+What actions should it expose?
+  Updating it's properties directly
+
+How does it keep it's state valid?
+  update() keeps the rendered output in check.
+
+What other classes does it need and why?
+  Only the individual plugin's page needs it. 
+
+--------------------------------------------------
+
+object-list input creation in render():
+
+if the length of values is empty:
+  create a new input container
+  for each field in field:
+    create a new input
+    append it to it's container
+otherwise:
+  for each value in values:
+    create a new input container
+    for each field in field:
+      get the value of that field from values
+      create a new plugin-setting with that value
+      append that plugin-setting to the container
+
+create a button that adds a new group of fields
+
+--------------------------------------------------
+
+object-list updating
+
+for each value in values:
+  if container[index of value] exists:
+    for field of fields:
+      set the field's value to the value
+
+  else:
+    make a new container
+    for each field:
+      create a plugin-setting with the value
+      append that to the container

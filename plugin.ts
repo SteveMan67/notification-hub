@@ -3,8 +3,18 @@ import type { Plugin } from "./types";
 import type { PluginContext, PluginDefinition } from "./sdk";
 import { createPluginContext } from "./sdk/createContext";
 import { db } from "./db/index";
+import { mkdirSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
-const pluginDir = "./plugins";
+const pluginDir = join(
+  process.env.LOCALAPPDATA ?? homedir(),
+  "NotificationHub",
+  "plugins",
+);
+
+mkdirSync(pluginDir, { recursive: true });
 
 export interface LoadedPlugin {
   plugin: PluginDefinition;
@@ -15,9 +25,11 @@ export const plugins: LoadedPlugin[] = [];
 
 export async function initPlugins() {
   for (const file of await readdir(pluginDir)) {
-    if (!file.endsWith(".ts")) continue;
+    if (!file.endsWith(".js")) continue;
 
-    const module = await import(`${pluginDir}/${file}`);
+    const pluginUrl = pathToFileURL(join(pluginDir, file)).href;
+    const module = await import(pluginUrl);
+
     const plugin = module.default as PluginDefinition;
 
     const context = createPluginContext(db, plugin.id, plugin.name);

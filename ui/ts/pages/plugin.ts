@@ -1,4 +1,5 @@
 import { Plugin } from "../types";
+import template from "../../pages/plugin.html" with { type: "text" };
 import type { BaseNavRequest, Page, PageContext } from "../page-manager";
 import {
   PluginSetting,
@@ -74,12 +75,7 @@ export class PluginPage implements PluginPage {
   }
 
   async mount(container: HTMLElement) {
-    const response = await fetch("/pages/plugin.html");
-
-    if (!response.ok) return;
-
-    container.innerHTML = await response.text();
-    return;
+    container.innerHTML = template as unknown as string;
   }
 
   async unmount() {}

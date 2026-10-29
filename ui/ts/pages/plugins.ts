@@ -1,4 +1,5 @@
 import { BaseNavRequest, Page, PageContext } from "../page-manager";
+import template from "../../pages/plugins.html" with { type: "text" };
 import { PluginCard } from "../components/plugin-card.js";
 import { Plugin } from "../types/index.js";
 
@@ -58,13 +59,7 @@ export class PluginsPage implements IPluginsPage {
   }
 
   async mount(container: HTMLElement) {
-    const response = await fetch("/pages/plugins.html");
-
-    if (!response.ok) {
-      throw new Error("Failed to load Notifications Page: " + response.status);
-    }
-
-    container.innerHTML = await response.text();
+    container.innerHTML = template as unknown as string;
 
     await this.fetchPlugins();
   }
