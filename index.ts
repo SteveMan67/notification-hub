@@ -4,6 +4,7 @@ import { initPlugins } from "./plugin.ts";
 import { NotificationCategories } from "./types/index.ts";
 import { plugins } from "./plugin.ts";
 import { pluginResponseItem, pluginsResponse } from "./types/responses.ts";
+import home from "./ui/index.html";
 
 await initPlugins();
 
@@ -51,7 +52,7 @@ const server = Bun.serve({
         return new Response("Plugin not found", { status: 404 });
       }
     },
-    "/": Bun.file("./ui/index.html"),
+    "/": home,
     "/*": async (req) => {
       const url = new URL(req.url);
       const path = url.pathname;
