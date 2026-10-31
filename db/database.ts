@@ -43,7 +43,7 @@ export class sqliteDatabase implements Database {
       WHERE plugin_id = ${pluginId} AND key = ${key};
     `;
 
-    return response[0]?.key;
+    return response[0]?.value;
   }
 
   async setPluginSetting(
@@ -107,6 +107,7 @@ export class sqliteDatabase implements Database {
 
     for (const row of rows) {
       const notification = {
+        ...JSON.parse(row.data),
         sourceNotificationId: row.source_notification_id,
         sourceId: row.source_id,
         title: row.title,
@@ -114,7 +115,6 @@ export class sqliteDatabase implements Database {
         timestamp: new Date(row.timestamp),
         read: row.read === 1,
         category: row.category,
-        ...JSON.stringify(row.data),
       } as Notification;
 
       if (notification.category === "assignment") {
