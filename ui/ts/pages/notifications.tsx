@@ -3,9 +3,9 @@ import { Notification } from "../types";
 import { ViewOperation } from "./view-operations";
 import { Sort } from "./view-operations/sort.js";
 import { Filter } from "./view-operations/filter.js";
-import { NotificationCard } from "../components/notification-card.tsx";
+import { NotificationCard } from "../components/notification-card";
 import { NotificationHubApi } from "../api/api.js";
-import { formatTimestamp } from "../components/notification-card.tsx";
+import { formatTimestamp } from "../components/notification-card";
 import {
   QueryClient,
   QueryClientProvider,
@@ -65,10 +65,12 @@ function applyActiveOperations(
   let out: Notification[] = [];
   if (activeOperations.filter) {
     out = viewOperations[activeOperations.filter].apply(notifications);
+  } else {
+    out = notifications;
   }
 
   if (activeOperations.sort) {
-    out = viewOperations[activeOperations.sort].apply(notifications);
+    out = viewOperations[activeOperations.sort].apply(out);
   }
   return out;
 }
@@ -104,8 +106,6 @@ export function NotificationsPage({
   activeOperations,
   api,
 }: NotificationsPageProps) {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["notifications"],
     queryFn: api.getNotifications,
@@ -119,21 +119,27 @@ export function NotificationsPage({
     return <p>Error: {error.message}</p>;
   }
 
+  const notifications = applyActiveOperations(data, activeOperations);
+
   return (
     <>
       <h1 className="title">Notifications</h1>
-      <div id="notifications">
-        {applyActiveOperations(data, activeOperations).map((notification) => (
-          <NotificationCard
-            title={notification.title}
-            pluginName=""
-            category={notification.category}
-            info={getInfoFromNotification(notification)}
-            timestamp={notification.timestamp}
-            read={notification.read}
-          />
-        ))}
-      </div>
+      {notifications.length ? (
+        <div id="notifications">
+          {notifications.map((notification) => (
+            <NotificationCard
+              title={notification.title}
+              pluginName=""
+              category={notification.category}
+              info={getInfoFromNotification(notification)}
+              timestamp={notification.timestamp}
+              read={notification.read}
+            />
+          ))}
+        </div>
+      ) : (
+        <span>Nothing to see here!</span>
+      )}
     </>
   );
 }

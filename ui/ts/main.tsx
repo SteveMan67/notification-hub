@@ -1,8 +1,9 @@
 import { createRoot } from "react-dom/client";
 import { useState } from "react";
-import { ActiveOperations, NotificationsPage } from "./pages/notifications.tsx";
-import { api } from "./api/api.ts";
+import { ActiveOperations, NotificationsPage } from "./pages/notifications";
+import { api } from "./api/api";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Sidebar } from "./pages/sidebar";
 
 export type PageName = "notifications" | "plugins" | "plugin";
 
@@ -18,9 +19,18 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="grid">
-        <aside className="sidebar">
-          <div className="category-list"></div>
-        </aside>
+        <Sidebar
+          page={page}
+          setPage={setPage}
+          filters={[
+            "messageFilter",
+            "emailFilter",
+            "assignmentFilter",
+            "unreadFilter",
+          ]}
+          activeOperations={activeOperations}
+          setActiveOperations={setActiveOperations}
+        ></Sidebar>
         <main className="main-content">
           {page === "notifications" && (
             <NotificationsPage api={api} activeOperations={activeOperations} />

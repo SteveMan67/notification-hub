@@ -1,14 +1,14 @@
 export interface sidebarItemProps {
   text: string;
-  selected: boolean;
-  notifications: number;
+  selected?: boolean;
+  notifications?: number;
   onclick(): void;
 }
 
 export function SidebarItem({
   text,
-  selected,
-  notifications,
+  selected = false,
+  notifications = 0,
   onclick,
 }: sidebarItemProps) {
   return (
@@ -17,7 +17,9 @@ export function SidebarItem({
       onClick={onclick}
     >
       <span className="text">{text}</span>
-      <span className="notifications">{notifications}</span>
+      <span className="notifications">
+        {notifications > 1 ? notifications : ""}
+      </span>
     </div>
   );
 }
