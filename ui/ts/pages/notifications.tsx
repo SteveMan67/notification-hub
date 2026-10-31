@@ -122,16 +122,18 @@ export function NotificationsPage({
   return (
     <>
       <h1 className="title">Notifications</h1>
-      {applyActiveOperations(data, activeOperations).map((notification) => (
-        <NotificationCard
-          title={notification.title}
-          pluginName=""
-          category={notification.category}
-          info={getInfoFromNotification(notification)}
-          timestamp={notification.timestamp}
-          read={notification.read}
-        />
-      ))}
+      <div id="notifications">
+        {applyActiveOperations(data, activeOperations).map((notification) => (
+          <NotificationCard
+            title={notification.title}
+            pluginName=""
+            category={notification.category}
+            info={getInfoFromNotification(notification)}
+            timestamp={notification.timestamp}
+            read={notification.read}
+          />
+        ))}
+      </div>
     </>
   );
 }

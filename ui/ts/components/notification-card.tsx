@@ -74,6 +74,7 @@ export function NotificationCard({
         </div>
         <p className="timestamp">{formatTimestamp(timestamp)}</p>
       </div>
+      <div className="spacer"></div>
     </>
   );
 }
