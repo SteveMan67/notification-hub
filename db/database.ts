@@ -2,26 +2,22 @@ import { SQL } from "bun";
 import type { Database } from "../db/index.ts";
 import type { NotificationCategory, Notification } from "../types/index.ts";
 
-const sql = new SQL(process.env.DATABASE_URL as string);
-
-await sql`
-DROP TABLE notifications;
-`;
+const sql = new SQL("sqlite://./notifications.sqlite");
 
 await sql`
   CREATE TABLE IF NOT EXISTS notifications (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     source_id TEXT NOT NULL,
     source_notification_id TEXT NOT NULL,
     category TEXT,
 
     title TEXT NOT NULL,
     body TEXT,
-    timestamp timestamp NOT NULL,
+    timestamp TEXT NOT NULL,
 
-    read BOOLEAN NOT NULL DEFAULT FALSE,
+    read INTEGER NOT NULL DEFAULT FALSE,
 
-    data JSONB NOT NULL DEFAULT '{}',
+    data TEXT NOT NULL DEFAULT '{}',
 
     UNIQUE (source_id, source_notification_id)
   )
@@ -37,7 +33,7 @@ await sql`
   )
 `;
 
-export class psql implements Database {
+export class sqliteDatabase implements Database {
   async getPluginSetting(
     pluginId: string,
     key: string,
@@ -47,7 +43,7 @@ export class psql implements Database {
       WHERE plugin_id = ${pluginId} AND key = ${key};
     `;
 
-    return response.key || undefined;
+    return response[0]?.key;
   }
 
   async setPluginSetting(
@@ -66,7 +62,7 @@ export class psql implements Database {
 
   async deletePluginSetting(pluginId: string, key: string): Promise<void> {
     await sql`
-      DELETE from settings 
+      DELETE from settings
       WHERE plugin_id = ${pluginId} AND key = ${key};
     `;
     return;
@@ -80,9 +76,9 @@ export class psql implements Database {
       category: string;
       title: string;
       body: string;
-      timestamp: Date;
-      read: boolean;
-      data: Record<string, unknown>;
+      timestamp: string;
+      read: number;
+      data: string;
     };
 
     let rows: NotificationRow[] = [];
@@ -115,11 +111,15 @@ export class psql implements Database {
         sourceId: row.source_id,
         title: row.title,
         body: row.body,
-        timestamp: row.timestamp,
-        read: row.read,
+        timestamp: new Date(row.timestamp),
+        read: row.read === 1,
         category: row.category,
-        ...row.data,
+        ...JSON.stringify(row.data),
       } as Notification;
+
+      if (notification.category === "assignment") {
+        notification.dueDate = new Date(notification.dueDate);
+      }
 
       notifications.push(notification);
     }
@@ -141,7 +141,7 @@ export class psql implements Database {
 
     await sql`
       INSERT INTO notifications (source_id, source_notification_id, category, title, body, timestamp, read, data)
-      VALUES (${sourceId}, ${sourceNotificationId}, ${category}, ${title}, ${body}, ${timestamp}, ${read}, ${data})
+      VALUES (${sourceId}, ${sourceNotificationId}, ${category}, ${title}, ${body}, ${timestamp.toISOString()}, ${read ? 1 : 0}, ${JSON.stringify(data)})
       ON CONFLICT DO NOTHING;
     `;
     return;
