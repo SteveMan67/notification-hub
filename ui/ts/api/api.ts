@@ -20,7 +20,13 @@ export class NotificationHubApi implements Api {
       method: "GET",
     });
     const body = await response.json();
-    return body as Notification[];
+    return body.map((notification: any) => ({
+      ...notification,
+      timestamp: new Date(notification.timestamp),
+      ...(notification.category === "assignment"
+        ? { dueDate: new Date(notification.dueDate) }
+        : {}),
+    })) as Notification[];
   }
 
   async getPlugins(): Promise<Plugin[]> {

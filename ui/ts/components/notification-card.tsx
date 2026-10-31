@@ -49,7 +49,7 @@ interface NotificationCardProps {
   read: boolean;
 }
 
-function NotificationCard({
+export function NotificationCard({
   title,
   pluginName,
   category,
@@ -57,19 +57,23 @@ function NotificationCard({
   timestamp,
   read,
 }: NotificationCardProps) {
-  <div className={`notification-card ${read ? "read" : ""}`}>
-    <div className="info">
-      <div className="top">
-        <p className="notification-category">{category}</p>
-        <p className="plugin-name">{pluginName}</p>
+  return (
+    <>
+      <div className={`notification-card ${read ? "read" : ""}`}>
+        <div className="info">
+          <div className="top">
+            <p className="notification-category">{category}</p>
+            <p className="plugin-name">{pluginName}</p>
+          </div>
+          <div className="main">
+            <p className="notification-title">{title}</p>
+          </div>
+          <div className="info-container">
+            <p className="assignment-info">{info.join(" · ")}</p>
+          </div>
+        </div>
+        <p className="timestamp">{formatTimestamp(timestamp)}</p>
       </div>
-      <div className="main">
-        <p className="notification-title">{title}</p>
-      </div>
-      <div className="info-container">
-        <p className="assignment-info">{info.join(" · ")}</p>
-      </div>
-    </div>
-    <p className="timestamp">{formatTimestamp(timestamp)}</p>
-  </div>;
+    </>
+  );
 }
