@@ -1,5 +1,5 @@
 import type { Notification, NotificationCategory } from "../types";
-import { psql } from "./database.ts";
+import { sqliteDatabase } from "./database.ts";
 
 export interface Database {
   getPluginSetting(pluginId: string, key: string): Promise<string | undefined>;
@@ -9,4 +9,4 @@ export interface Database {
   addNotification(notification: Notification): Promise<void>;
 }
 
-export const db: Database = new psql();
+export const db: Database = new sqliteDatabase();

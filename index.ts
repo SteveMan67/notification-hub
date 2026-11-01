@@ -4,18 +4,12 @@ import { initPlugins } from "./plugin.ts";
 import { NotificationCategories } from "./types/index.ts";
 import { plugins } from "./plugin.ts";
 import { pluginResponseItem, pluginsResponse } from "./types/responses.ts";
-
-await initPlugins();
-
-console.log("initialized plugins");
-
-await updateNotifications();
-console.log("fetched notifications");
-
-setInterval(updateNotifications, 5 * 60 * 1000);
+import home from "./ui/index.html";
 
 const server = Bun.serve({
+  hostname: "127.0.0.1",
   port: 3000,
+  development: false,
   routes: {
     "/api/notifications": async () => {
       const notifications = await db.getNotifications(null);
@@ -51,7 +45,7 @@ const server = Bun.serve({
         return new Response("Plugin not found", { status: 404 });
       }
     },
-    "/": Bun.file("./ui/index.html"),
+    "/": home,
     "/*": async (req) => {
       const url = new URL(req.url);
       const path = url.pathname;
@@ -62,3 +56,12 @@ const server = Bun.serve({
 });
 
 console.log(`Server running on port ${server.port}`);
+
+await initPlugins();
+
+console.log("initialized plugins");
+
+await updateNotifications();
+console.log("fetched notifications");
+
+setInterval(updateNotifications, 5 * 60 * 1000);

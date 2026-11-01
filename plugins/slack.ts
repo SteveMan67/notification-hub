@@ -15,6 +15,11 @@ export default definePlugin({
   version: "Slack",
 
   async initialize(ctx) {
+    if (!APP_TOKEN) {
+      ctx.logger.warn("slack skipped: no app token configured.");
+      return;
+    }
+
     const response = await fetch(
       "https://slack.com/api/apps.connections.open",
       {
@@ -27,12 +32,10 @@ export default definePlugin({
 
     const data: any = (await response.json()) as any;
 
-    if (!data.ok) {
-      ctx.logger.error(`slack: ${data.error}`);
-    }
-
-    if (!data.url) {
-      ctx.logger.error("slack returned no url");
+    if (!data.ok || !data.url) {
+      throw new Error(
+        `Slack connection failed: ${data.error ?? "missing URL"}`,
+      );
     }
 
     const socket = new WebSocket(data.url);
