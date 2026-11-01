@@ -3,7 +3,7 @@ import type { BaseNavRequest, Page, PageContext } from "../page-manager";
 import {
   PluginSetting,
   PluginSettingProps,
-} from "../components/plugin-setting.js";
+} from "../components/OLD-plugin-setting.js";
 
 export interface PluginPage extends Page {}
 

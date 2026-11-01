@@ -38,6 +38,7 @@ export function Sidebar({
         <SidebarItem
           text="Overview"
           onclick={() => {
+            setPage("notifications");
             setActiveOperations({
               ...activeOperations,
               filter: undefined,
@@ -49,6 +50,7 @@ export function Sidebar({
             <SidebarItem
               text={filter ? filterNames[filter] : ""}
               onclick={() => {
+                setPage("notifications");
                 setActiveOperations({
                   ...activeOperations,
                   filter: filter,
@@ -60,12 +62,6 @@ export function Sidebar({
       </div>
 
       <div className="settings-list">
-        <SidebarItem
-          text="Plugins"
-          onclick={() => {
-            setPage("plugins");
-          }}
-        ></SidebarItem>
         <SidebarItem text="Settings" onclick={() => {}}></SidebarItem>
       </div>
     </aside>

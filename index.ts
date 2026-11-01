@@ -7,7 +7,9 @@ import { pluginResponseItem, pluginsResponse } from "./types/responses.ts";
 import home from "./ui/index.html";
 
 const server = Bun.serve({
+  hostname: "127.0.0.1",
   port: 3000,
+  development: false,
   routes: {
     "/api/notifications": async () => {
       const notifications = await db.getNotifications(null);
