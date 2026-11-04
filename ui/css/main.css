@@ -142,6 +142,10 @@ span {
   font-size: 16px;
 }
 
+#root {
+  height: 100%;
+}
+
 html {
   width: 100vw;
   height: 100vh;

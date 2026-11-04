@@ -1,7 +1,7 @@
 import "./components/notification-card.js";
 import "./components/sidebar-item.js";
 import "./components/plugin-card.js";
-import { Sidebar } from "./sidebar.js";
+import { Sidebar } from "./OLD-sidebar.js";
 import { api, NotificationHubApi } from "./api/api.js";
 import { PageManager } from "./page-manager.js";
 

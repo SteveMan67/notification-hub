@@ -6,17 +6,10 @@ import { plugins } from "./plugin.ts";
 import { pluginResponseItem, pluginsResponse } from "./types/responses.ts";
 import home from "./ui/index.html";
 
-await initPlugins();
-
-console.log("initialized plugins");
-
-await updateNotifications();
-console.log("fetched notifications");
-
-setInterval(updateNotifications, 5 * 60 * 1000);
-
 const server = Bun.serve({
+  hostname: "127.0.0.1",
   port: 3000,
+  development: false,
   routes: {
     "/": home,
     "/api/notifications": async () => {
@@ -57,3 +50,12 @@ const server = Bun.serve({
 });
 
 console.log(`Server running on port ${server.port}`);
+
+await initPlugins();
+
+console.log("initialized plugins");
+
+await updateNotifications();
+console.log("fetched notifications");
+
+setInterval(updateNotifications, 5 * 60 * 1000);

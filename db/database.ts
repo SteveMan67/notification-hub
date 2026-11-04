@@ -75,7 +75,7 @@ export class SqliteDatabase implements Database {
 
   async deletePluginSetting(pluginId: string, key: string): Promise<void> {
     await sql`
-      DELETE from settings 
+      DELETE from settings
       WHERE plugin_id = ${pluginId} AND key = ${key};
     `;
     return;
@@ -135,6 +135,10 @@ export class SqliteDatabase implements Database {
         read: row.read === 1,
         category: row.category,
       } as Notification;
+
+      if (notification.category === "assignment") {
+        notification.dueDate = new Date(notification.dueDate);
+      }
 
       notifications.push(notification);
     }
