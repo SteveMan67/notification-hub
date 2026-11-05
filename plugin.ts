@@ -29,7 +29,10 @@ export async function initPlugins() {
     const pluginUrl = pathToFileURL(join(pluginDir, file)).href;
     const module = await import(pluginUrl);
 
-    const plugin = module.default as PluginDefinition;
+    try {
+      const plugin = module.default as PluginDefinition;
+
+      const context = createPluginContext(db, plugin.id, plugin.name);
 
       if (plugin.initialize) {
         await plugin.initialize(context);
