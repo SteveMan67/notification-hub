@@ -61,9 +61,7 @@ export function Sidebar({
         })}
       </div>
 
-      <div className="settings-list">
-        <SidebarItem text="Settings" onclick={() => {}}></SidebarItem>
-      </div>
+      <div className="settings-list"></div>
     </aside>
   );
 }
